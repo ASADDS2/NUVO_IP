@@ -2,8 +2,163 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Estilo base global */
+/* Global CSS Variables for Dark Theme */
+:root {
+    --nuvo-dark-bg: #0A0E1A;
+    --nuvo-card-bg: #161B2E;
+    --nuvo-border: rgba(255, 255, 255, 0.1);
+    --nuvo-green: #00E676;
+    --nuvo-green-hover: #00c865;
+    --nuvo-shadow: rgba(0, 230, 118, 0.15);
+    --nuvo-text-primary: #FFFFFF;
+    --nuvo-text-secondary: #9CA3AF;
+    --nuvo-text-muted: #6B7280;
+}
+
+/* Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
-    background-color: #F5F6FA;
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--nuvo-dark-bg);
+    color: var(--nuvo-text-primary);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    overflow-x: hidden;
+}
+
+/* Card Styles */
+.nuvo-card {
+    background-color: var(--nuvo-card-bg);
+    border: 1px solid var(--nuvo-border);
+    transition: all 0.3s ease;
+}
+
+.nuvo-card:hover {
+    border-color: var(--nuvo-green);
+    box-shadow: 0 10px 30px var(--nuvo-shadow);
+    transform: translateY(-2px);
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--nuvo-dark-bg);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Animation keyframes */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.animate-float {
+    animation: float 3s ease-in-out infinite;
+}
+
+/* Staggered animations */
+.grid > div:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.grid > div:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.grid > div:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.grid > div:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+/* Button Styles */
+.btn-primary {
+    background-color: var(--nuvo-green);
+    color: #000;
+    font-weight: 600;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: var(--nuvo-green-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px var(--nuvo-shadow);
+}
+
+/* Input Styles */
+.nuvo-input {
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--nuvo-border);
+    color: var(--nuvo-text-primary);
+    transition: all 0.3s ease;
+}
+
+.nuvo-input:focus {
+    outline: none;
+    border-color: var(--nuvo-green);
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+.nuvo-input::placeholder {
+    color: var(--nuvo-text-muted);
+}
+
+/* Badge Styles */
+.badge-outline {
+    border: 1px solid var(--nuvo-border);
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Utility Classes */
+.text-nuvo-green {
+    color: var(--nuvo-green);
+}
+
+.bg-nuvo-dark {
+    background-color: var(--nuvo-dark-bg);
+}
+
+.bg-nuvo-card {
+    background-color: var(--nuvo-card-bg);
+}
+
+.border-nuvo {
+    border-color: var(--nuvo-border);
 }
