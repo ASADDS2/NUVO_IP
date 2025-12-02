@@ -1,4 +1,4 @@
-package com.nuvo.pool.application.services;
+package com.nuvo.pool.infrastructure.dto;
 
 import lombok.Builder;
 import lombok.Data;

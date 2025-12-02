@@ -1,8 +1,6 @@
-package com.nuvo.pool.application.usecases;
-
-import com.nuvo.pool.application.services.CreatePoolRequest;
-import com.nuvo.pool.application.services.PoolWithStatsDTO;
-import com.nuvo.pool.application.services.UpdatePoolRequest;
+import com.nuvo.pool.infrastructure.dto.CreatePoolRequest;
+import com.nuvo.pool.infrastructure.dto.PoolWithStatsDTO;
+import com.nuvo.pool.infrastructure.dto.UpdatePoolRequest;
 import com.nuvo.pool.domain.model.Investment;
 import com.nuvo.pool.domain.model.InvestmentStatus;
 import com.nuvo.pool.domain.model.Pool;
@@ -43,14 +41,13 @@ public class ManagePoolUseCaseImpl implements ManagePoolUseCase {
             throw new RuntimeException("La tasa de interés debe ser mayor o igual a 0");
         }
 
-        Pool pool = Pool.builder()
-                .name(request.getName())
-                .description(request.getDescription())
-                .interestRatePerDay(request.getInterestRatePerDay())
-                .maxParticipants(request.getMaxParticipants())
-                .active(true)
-                .createdAt(LocalDateTime.now())
-                .build();
+        Pool pool = new Pool();
+        pool.setName(request.getName());
+        pool.setDescription(request.getDescription());
+        pool.setInterestRatePerDay(request.getInterestRatePerDay());
+        pool.setMaxParticipants(request.getMaxParticipants());
+        pool.setActive(true);
+        pool.setCreatedAt(LocalDateTime.now());
 
         return poolRepository.save(pool);
     }

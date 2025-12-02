@@ -3,7 +3,7 @@ package com.nuvo.loan.infrastructure.adapters;
 import com.nuvo.loan.domain.model.Loan;
 import com.nuvo.loan.domain.ports.out.LoanRepositoryPort;
 import com.nuvo.loan.infrastructure.entities.LoanEntity;
-import com.nuvo.loan.infrastructure.mappers.LoanMapper;
+import com.nuvo.loan.infrastructure.mapper.LoanPersistenceMapper;
 import com.nuvo.loan.infrastructure.repositories.JpaLoanRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class LoanRepositoryAdapter implements LoanRepositoryPort {
 
     private final JpaLoanRepository jpaLoanRepository;
-    private final LoanMapper loanMapper;
+    private final LoanPersistenceMapper loanMapper;
 
     @Override
     public Loan save(Loan loan) {

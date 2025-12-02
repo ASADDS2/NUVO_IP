@@ -1,9 +1,12 @@
 package com.nuvo.account.infrastructure.controllers;
 
-import com.nuvo.account.application.services.CreateAccountRequest;
 import com.nuvo.account.domain.model.Account;
 import com.nuvo.account.domain.ports.in.CreateAccountUseCase;
-import com.nuvo.account.domain.ports.out.AccountRepositoryPort;
+import com.nuvo.account.domain.ports.in.DepositUseCase;
+import com.nuvo.account.domain.ports.in.FindAccountByUserIdUseCase;
+import com.nuvo.account.domain.ports.in.FindAllAccountsUseCase;
+import com.nuvo.account.infrastructure.dto.CreateAccountRequest;
+import com.nuvo.account.infrastructure.mapper.AccountWebMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,29 +20,29 @@ import java.util.List;
 public class AccountController {
 
     private final CreateAccountUseCase createAccountUseCase;
-    private final AccountRepositoryPort accountRepository;
+    private final FindAccountByUserIdUseCase findAccountByUserIdUseCase;
+    private final FindAllAccountsUseCase findAllAccountsUseCase;
+    private final DepositUseCase depositUseCase;
+    private final AccountWebMapper mapper;
 
     @PostMapping
     public ResponseEntity<Account> createAccount(@RequestBody CreateAccountRequest request) {
-        return ResponseEntity.ok(createAccountUseCase.createAccount(request));
+        Account account = mapper.toDomain(request);
+        return ResponseEntity.ok(createAccountUseCase.createAccount(account));
     }
 
     @GetMapping("/{userId}")
     public ResponseEntity<Account> getAccount(@PathVariable Integer userId) {
-        return ResponseEntity.ok(accountRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("Cuenta no encontrada")));
+        return ResponseEntity.ok(findAccountByUserIdUseCase.findByUserId(userId));
     }
 
     @GetMapping
     public ResponseEntity<List<Account>> getAll() {
-        return ResponseEntity.ok(accountRepository.findAll());
+        return ResponseEntity.ok(findAllAccountsUseCase.findAll());
     }
 
     @PostMapping("/{userId}/deposit")
     public ResponseEntity<Account> deposit(@PathVariable Integer userId, @RequestParam BigDecimal amount) {
-        Account account = accountRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("Cuenta no encontrada"));
-        account.setBalance(account.getBalance().add(amount));
-        return ResponseEntity.ok(accountRepository.save(account));
+        return ResponseEntity.ok(depositUseCase.deposit(userId, amount));
     }
 }

@@ -1,4 +1,4 @@
-package com.nuvo.pool.application.services;
+package com.nuvo.pool.infrastructure.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,13 +9,15 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreatePoolRequest {
+public class UpdatePoolRequest {
 
     private String name;
 
     private String description;
 
-    private Double interestRatePerDay; // Tasa de interés diaria (ej: 0.01 = 1%)
+    private Integer maxParticipants;
 
-    private Integer maxParticipants; // Límite de inversores
+    private Boolean active;
+
+    private Double interestRatePerDay;
 }

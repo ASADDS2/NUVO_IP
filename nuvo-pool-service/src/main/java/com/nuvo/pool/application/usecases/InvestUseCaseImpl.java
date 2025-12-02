@@ -1,6 +1,4 @@
-package com.nuvo.pool.application.usecases;
-
-import com.nuvo.pool.application.services.InvestRequest;
+import com.nuvo.pool.infrastructure.dto.InvestRequest;
 import com.nuvo.pool.domain.model.Investment;
 import com.nuvo.pool.domain.model.InvestmentStatus;
 import com.nuvo.pool.domain.model.Pool;
@@ -13,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -54,12 +53,12 @@ public class InvestUseCaseImpl implements InvestUseCase {
 
         accountPort.updateBalance(request.getUserId(), request.getAmount().negate());
 
-        Investment investment = Investment.builder()
-                .userId(request.getUserId())
-                .investedAmount(request.getAmount())
-                .status(InvestmentStatus.ACTIVE)
-                .pool(pool)
-                .build();
+        Investment investment = new Investment();
+        investment.setUserId(request.getUserId());
+        investment.setInvestedAmount(request.getAmount());
+        investment.setStatus(InvestmentStatus.ACTIVE);
+        investment.setPool(pool);
+        investment.setInvestedAt(LocalDateTime.now());
 
         return investmentRepository.save(investment);
     }

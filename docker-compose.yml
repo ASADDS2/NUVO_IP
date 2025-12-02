@@ -6,7 +6,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 1234
     command: -p 5444
-    network_mode: host
+    ports:
+      - "5444:5444"
     volumes:
       - ./docker/init-scripts:/docker-entrypoint-initdb.d
       - postgres_data:/var/lib/postgresql/data
