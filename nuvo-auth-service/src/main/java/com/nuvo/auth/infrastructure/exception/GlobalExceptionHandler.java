@@ -1,4 +1,4 @@
-package com.nuvo.auth.infrastructure.config;
+package com.nuvo.auth.infrastructure.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
