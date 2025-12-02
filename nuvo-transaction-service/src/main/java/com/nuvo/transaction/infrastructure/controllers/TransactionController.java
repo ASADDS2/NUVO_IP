@@ -5,6 +5,7 @@ import com.nuvo.transaction.domain.model.Transaction;
 import com.nuvo.transaction.domain.ports.in.DepositUseCase;
 import com.nuvo.transaction.domain.ports.in.GetHistoryUseCase;
 import com.nuvo.transaction.domain.ports.in.TransferUseCase;
+import com.nuvo.transaction.domain.ports.in.DeleteTransactionUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,7 @@ public class TransactionController {
     private final GetHistoryUseCase getHistoryUseCase;
     private final DepositUseCase depositUseCase;
     private final TransferUseCase transferUseCase;
+    private final DeleteTransactionUseCase deleteTransactionUseCase;
 
     @GetMapping("/history/{userId}")
     public ResponseEntity<List<Transaction>> getHistory(@PathVariable Integer userId) {
@@ -42,5 +44,11 @@ public class TransactionController {
     public ResponseEntity<Void> transfer(@RequestBody TransferRequest request) {
         transferUseCase.transfer(request);
         return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTransaction(@PathVariable Long id) {
+        deleteTransactionUseCase.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

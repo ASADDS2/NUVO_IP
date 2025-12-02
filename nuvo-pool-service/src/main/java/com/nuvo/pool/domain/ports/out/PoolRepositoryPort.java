@@ -16,4 +16,6 @@ public interface PoolRepositoryPort {
     boolean existsByName(String name);
 
     List<Pool> findAllWithActiveInvestments();
+
+    void deleteById(Long id);
 }

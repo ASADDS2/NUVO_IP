@@ -5,6 +5,7 @@ import com.nuvo.auth.domain.model.User;
 import com.nuvo.auth.domain.ports.in.LoginUseCase;
 import com.nuvo.auth.domain.ports.in.RegisterUseCase;
 import com.nuvo.auth.domain.ports.in.RetrieveUserUseCase;
+import com.nuvo.auth.domain.ports.in.DeleteUserUseCase;
 import com.nuvo.auth.domain.ports.out.JwtPort;
 import com.nuvo.auth.domain.ports.out.PasswordEncoderPort;
 import com.nuvo.auth.infrastructure.dto.AuthenticationRequest;
@@ -23,6 +24,7 @@ public class AuthenticationController {
     private final RegisterUseCase registerUseCase;
     private final LoginUseCase loginUseCase;
     private final RetrieveUserUseCase retrieveUserUseCase;
+    private final DeleteUserUseCase deleteUserUseCase;
     private final AuthWebMapper mapper;
     private final JwtPort jwtPort;
     private final PasswordEncoderPort passwordEncoder;
@@ -56,5 +58,11 @@ public class AuthenticationController {
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Integer id) {
         return ResponseEntity.ok(retrieveUserUseCase.getUserById(id));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUserById(@PathVariable Integer id) {
+        deleteUserUseCase.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

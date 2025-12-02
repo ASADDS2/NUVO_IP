@@ -1,7 +1,7 @@
 package com.nuvo.pool.infrastructure.controllers;
 
-import com.nuvo.pool.application.services.InvestRequest;
-import com.nuvo.pool.application.services.PoolStats;
+import com.nuvo.pool.infrastructure.dto.InvestRequest;
+import com.nuvo.pool.infrastructure.dto.PoolStats;
 import com.nuvo.pool.domain.model.Investment;
 import com.nuvo.pool.domain.ports.in.GetInvestmentsUseCase;
 import com.nuvo.pool.domain.ports.in.InvestUseCase;

@@ -1,4 +1,6 @@
-import com.nuvo.pool.infrastructure.dto.InvestRequest;
+package com.nuvo.pool.application.usecases;
+
+import com.nuvo.pool.infrastructure.dto.InvestRequest; 
 import com.nuvo.pool.domain.model.Investment;
 import com.nuvo.pool.domain.model.InvestmentStatus;
 import com.nuvo.pool.domain.model.Pool;

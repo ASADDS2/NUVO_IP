@@ -5,6 +5,7 @@ import com.nuvo.account.domain.ports.in.CreateAccountUseCase;
 import com.nuvo.account.domain.ports.in.DepositUseCase;
 import com.nuvo.account.domain.ports.in.FindAccountByUserIdUseCase;
 import com.nuvo.account.domain.ports.in.FindAllAccountsUseCase;
+import com.nuvo.account.domain.ports.in.DeleteAccountUseCase;
 import com.nuvo.account.infrastructure.dto.CreateAccountRequest;
 import com.nuvo.account.infrastructure.mapper.AccountWebMapper;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ public class AccountController {
     private final FindAccountByUserIdUseCase findAccountByUserIdUseCase;
     private final FindAllAccountsUseCase findAllAccountsUseCase;
     private final DepositUseCase depositUseCase;
+    private final DeleteAccountUseCase deleteAccountUseCase;
     private final AccountWebMapper mapper;
 
     @PostMapping
@@ -44,5 +46,11 @@ public class AccountController {
     @PostMapping("/{userId}/deposit")
     public ResponseEntity<Account> deposit(@PathVariable Integer userId, @RequestParam BigDecimal amount) {
         return ResponseEntity.ok(depositUseCase.deposit(userId, amount));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteAccount(@PathVariable Long id) {
+        deleteAccountUseCase.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

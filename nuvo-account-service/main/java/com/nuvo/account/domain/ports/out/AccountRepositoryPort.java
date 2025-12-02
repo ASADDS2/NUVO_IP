@@ -10,4 +10,6 @@ public interface AccountRepositoryPort {
     Optional<Account> findByUserId(Integer userId);
 
     List<Account> findAll();
+
+    void deleteById(Long id);
 }

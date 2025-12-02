@@ -58,3 +58,6 @@
 2025-12-02T17:09:54.519-05:00  WARN 102986 --- [account-service] [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
 2025-12-02T17:09:54.688-05:00  INFO 102986 --- [account-service] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8082 (http) with context path ''
 2025-12-02T17:09:54.692-05:00  INFO 102986 --- [account-service] [           main] com.nuvo.account.AccountApplication      : Started AccountApplication in 1.818 seconds (process running for 1.969)
+2025-12-02T17:32:51.599-05:00  INFO 102986 --- [account-service] [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-12-02T17:32:51.602-05:00  INFO 102986 --- [account-service] [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2025-12-02T17:32:51.607-05:00  INFO 102986 --- [account-service] [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.

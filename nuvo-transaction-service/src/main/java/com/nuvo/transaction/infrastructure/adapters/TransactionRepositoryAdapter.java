@@ -47,6 +47,11 @@ public class TransactionRepositoryAdapter implements TransactionRepositoryPort {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public void deleteById(Long id) {
+        jpaTransactionRepository.deleteById(id);
+    }
+
     private Transaction toDomain(TransactionEntity entity) {
         return Transaction.builder()
                 .id(entity.getId())

@@ -1,6 +1,6 @@
 package com.nuvo.pool.domain.ports.in;
 
-import com.nuvo.pool.application.services.PoolStats;
+import com.nuvo.pool.infrastructure.dto.PoolStats;
 import com.nuvo.pool.domain.model.Investment;
 import java.util.List;
 

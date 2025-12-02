@@ -4,6 +4,7 @@ import com.nuvo.transaction.domain.model.Transaction;
 import com.nuvo.transaction.domain.ports.in.DepositUseCase;
 import com.nuvo.transaction.domain.ports.in.GetHistoryUseCase;
 import com.nuvo.transaction.domain.ports.in.TransferUseCase;
+import com.nuvo.transaction.domain.ports.in.DeleteTransactionUseCase;
 import com.nuvo.transaction.domain.ports.out.AccountPort;
 import com.nuvo.transaction.domain.ports.out.TransactionRepositoryPort;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class TransactionService implements GetHistoryUseCase, DepositUseCase, TransferUseCase {
+public class TransactionService implements GetHistoryUseCase, DepositUseCase, TransferUseCase, DeleteTransactionUseCase {
 
     private final TransactionRepositoryPort transactionRepository;
     private final AccountPort accountPort;
@@ -59,5 +60,10 @@ public class TransactionService implements GetHistoryUseCase, DepositUseCase, Tr
                 .build();
 
         transactionRepository.save(transaction);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        transactionRepository.deleteById(id);
     }
 }

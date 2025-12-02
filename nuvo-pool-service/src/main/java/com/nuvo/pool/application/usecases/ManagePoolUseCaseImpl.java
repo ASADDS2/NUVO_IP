@@ -1,3 +1,5 @@
+package com.nuvo.pool.application.usecases;
+
 import com.nuvo.pool.infrastructure.dto.CreatePoolRequest;
 import com.nuvo.pool.infrastructure.dto.PoolWithStatsDTO;
 import com.nuvo.pool.infrastructure.dto.UpdatePoolRequest;
@@ -124,12 +126,8 @@ public class ManagePoolUseCaseImpl implements ManagePoolUseCase {
         for (Investment investment : activeInvestments) {
             withdrawUseCase.withdraw(investment.getId());
         }
-
-        // Note: We need to delete the pool - this will require a delete method in the
-        // port
-        // For now, we'll just mark it as inactive
-        pool.setActive(false);
-        poolRepository.save(pool);
+        // Delete pool from repository after handling active investments
+        poolRepository.deleteById(pool.getId());
     }
 
     @Override

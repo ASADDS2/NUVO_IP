@@ -1,9 +1,7 @@
 package com.nuvo.pool.infrastructure.adapters;
 
-import com.nuvo.pool.domain.model.Investment;
 import com.nuvo.pool.domain.model.Pool;
 import com.nuvo.pool.domain.ports.out.PoolRepositoryPort;
-import com.nuvo.pool.infrastructure.entities.InvestmentEntity;
 import com.nuvo.pool.infrastructure.entities.PoolEntity;
 import com.nuvo.pool.infrastructure.mapper.PoolPersistenceMapper;
 import com.nuvo.pool.infrastructure.repositories.JpaPoolRepository;
@@ -55,5 +53,10 @@ public class PoolRepositoryAdapter implements PoolRepositoryPort {
         return jpaPoolRepository.findAllWithActiveInvestments().stream()
                 .map(poolMapper::toDomain)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        jpaPoolRepository.deleteById(id);
     }
 }

@@ -1,8 +1,8 @@
 package com.nuvo.pool.infrastructure.controllers;
 
-import com.nuvo.pool.application.services.CreatePoolRequest;
-import com.nuvo.pool.application.services.PoolWithStatsDTO;
-import com.nuvo.pool.application.services.UpdatePoolRequest;
+import com.nuvo.pool.infrastructure.dto.CreatePoolRequest;
+import com.nuvo.pool.infrastructure.dto.PoolWithStatsDTO;
+import com.nuvo.pool.infrastructure.dto.UpdatePoolRequest;
 import com.nuvo.pool.domain.model.Pool;
 import com.nuvo.pool.domain.ports.in.ManagePoolUseCase;
 import lombok.RequiredArgsConstructor;

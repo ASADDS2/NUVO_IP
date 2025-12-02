@@ -1,6 +1,6 @@
 package com.nuvo.pool.application.usecases;
 
-import com.nuvo.pool.application.services.PoolStats;
+import com.nuvo.pool.infrastructure.dto.PoolStats;
 import com.nuvo.pool.domain.model.Investment;
 import com.nuvo.pool.domain.model.InvestmentStatus;
 import com.nuvo.pool.domain.ports.in.GetInvestmentsUseCase;

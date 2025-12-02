@@ -9,4 +9,6 @@ public interface TransactionRepositoryPort {
     List<Transaction> findBySourceUserIdOrTargetUserId(Integer userId);
 
     List<Transaction> findAll();
+
+    void deleteById(Long id);
 }
