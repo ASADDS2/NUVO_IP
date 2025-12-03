@@ -92,4 +92,13 @@ export class AccountsComponent implements OnInit {
     this.selectedUser = null;
     this.userLoans = [];
   }
+
+  // Métodos para estadísticas
+  getActiveCounts(): number {
+    return this.accounts.filter(acc => acc.balance > 0).length;
+  }
+
+  getTotalBalance(): number {
+    return this.accounts.reduce((sum, acc) => sum + (acc.balance || 0), 0);
+  }
 }

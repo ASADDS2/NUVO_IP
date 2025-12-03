@@ -1,37 +1,80 @@
-<div class="p-6">
-    <h2 class="text-2xl font-bold text-nuvo-dark mb-6">Gestión de Cuentas Bancarias</h2>
+<div class="min-h-screen bg-nuvo-dark p-8">
+  <!-- Header -->
+  <div class="mb-8">
+    <h1 class="text-4xl font-bold text-white mb-2">Gestión de Cuentas Bancarias</h1>
+    <p class="text-gray-400">Administra todas las cuentas bancarias del sistema</p>
+  </div>
 
-    <div *ngIf="isLoading" class="text-center py-10 text-nuvo-gray">
-        Cargando datos desde MySQL...
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+    <!-- Total Cuentas -->
+    <div class="bg-gradient-to-br from-green-900 to-green-800 rounded-lg p-6 border border-green-500/20">
+      <div class="flex items-center justify-between mb-4">
+        <div class="text-green-400 text-sm font-semibold uppercase">Total Cuentas</div>
+        <span class="text-2xl">💳</span>
+      </div>
+      <div class="text-4xl font-bold text-white">{{ accounts.length }}</div>
+      <div class="text-green-300 text-xs mt-2">Cuentas activas en el sistema</div>
     </div>
 
-    <div *ngIf="!isLoading" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <table class="w-full text-left">
-            <thead class="bg-gray-50 border-b border-gray-100">
-                <tr>
-                    <th class="p-4 font-semibold text-gray-600">ID Usuario</th>
-                    <th class="p-4 font-semibold text-gray-600">Número de Cuenta</th>
-                    <th class="p-4 font-semibold text-gray-600">Saldo Actual</th>
-                    <th class="p-4 font-semibold text-gray-600">Estado</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-100">
-                <tr *ngFor="let acc of accounts" (click)="openModal(acc)"
-                    class="hover:bg-gray-50 transition-colors cursor-pointer">
-                    <td class="p-4 font-medium text-nuvo-dark">#{{ acc.userId }}</td>
-                    <td class="p-4 text-gray-500 font-mono">{{ acc.accountNumber }}</td>
-                    <td class="p-4 font-bold text-nuvo-green">
-                        {{ acc.balance | currency:'USD':'symbol':'1.2-2' }}
-                    </td>
-                    <td class="p-4">
-                        <span class="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold">
-                            ACTIVA
-                        </span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+    <!-- Cuentas Activas -->
+    <div class="bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg p-6 border border-blue-500/20">
+      <div class="flex items-center justify-between mb-4">
+        <div class="text-blue-400 text-sm font-semibold uppercase">Cuentas Activas</div>
+        <span class="text-2xl">✅</span>
+      </div>
+      <div class="text-4xl font-bold text-white">{{ getActiveCounts() }}</div>
+      <div class="text-blue-300 text-xs mt-2">Cuentas con saldo positivo</div>
     </div>
+
+    <!-- Balance Total -->
+    <div class="bg-gradient-to-br from-purple-900 to-purple-800 rounded-lg p-6 border border-purple-500/20">
+      <div class="flex items-center justify-between mb-4">
+        <div class="text-purple-400 text-sm font-semibold uppercase">Balance Total</div>
+        <span class="text-2xl">💰</span>
+      </div>
+      <div class="text-3xl font-bold text-white">{{ getTotalBalance() | currency:'USD':'symbol':'1.0-0' }}</div>
+      <div class="text-purple-300 text-xs mt-2">Suma de todos los saldos</div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="text-center py-10 text-gray-400">
+    <div class="text-lg">Cargando cuentas...</div>
+  </div>
+
+  <!-- Accounts Table -->
+  <div *ngIf="!isLoading" class="bg-gray-900 rounded-lg border border-gray-800 overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left">
+        <thead class="bg-gray-800 border-b border-gray-700">
+          <tr>
+            <th class="px-6 py-4 text-sm font-semibold text-gray-300">ID USUARIO</th>
+            <th class="px-6 py-4 text-sm font-semibold text-gray-300">NÚMERO DE CUENTA</th>
+            <th class="px-6 py-4 text-sm font-semibold text-gray-300">PROPIETARIO</th>
+            <th class="px-6 py-4 text-sm font-semibold text-gray-300">SALDO ACTUAL</th>
+            <th class="px-6 py-4 text-sm font-semibold text-gray-300">ESTADO</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-700">
+          <tr *ngFor="let acc of accounts" (click)="openModal(acc)"
+            class="hover:bg-gray-800/50 transition-colors cursor-pointer">
+            <td class="px-6 py-4 text-sm font-medium text-gray-300">#{{ acc.userId }}</td>
+            <td class="px-6 py-4 text-sm font-mono text-gray-400">{{ acc.accountNumber }}</td>
+            <td class="px-6 py-4 text-sm text-gray-300">{{ acc.accountHolder || 'N/A' }}</td>
+            <td class="px-6 py-4 text-sm font-bold text-green-400">
+              {{ acc.balance | currency:'USD':'symbol':'1.2-2' }}
+            </td>
+            <td class="px-6 py-4 text-sm">
+              <span class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-xs font-bold border border-green-500/30">
+                ✓ ACTIVA
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
     <!-- MODAL -->
     <div *ngIf="showModal"

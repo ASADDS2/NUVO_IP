@@ -33,6 +33,10 @@ export class DataService {
     return this.http.put(`${this.loanUrl}/${loanId}/approve`, {});
   }
 
+  rejectLoan(loanId: number): Observable<any> {
+    return this.http.put(`${this.loanUrl}/${loanId}/reject`, {});
+  }
+
   // --- POOL INVESTMENTS ---
   getAllInvestments(): Observable<any[]> {
     return this.http.get<any[]>(this.poolUrl);
