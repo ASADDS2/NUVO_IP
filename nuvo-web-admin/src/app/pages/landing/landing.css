@@ -4,15 +4,15 @@
 :host {
     font-family: 'Inter', sans-serif;
 
-    /* Dark Theme (Default) */
+    /* Dark Theme (Default) - Actualizado para coincidir con paleta de referencia */
     --nuvo-green: #00E676;
-    --nuvo-bg: #050505;
-    --nuvo-card-bg: #111111;
+    --nuvo-bg: #0A0E1A;
+    --nuvo-card-bg: #141B2D;
     --nuvo-text-primary: #ffffff;
-    --nuvo-text-secondary: #888888;
-    --nuvo-border: rgba(255, 255, 255, 0.05);
-    --nuvo-nav-bg: rgba(5, 5, 5, 0.8);
-    --nuvo-input-bg: rgba(255, 255, 255, 0.05);
+    --nuvo-text-secondary: #9CA3AF;
+    --nuvo-border: rgba(255, 255, 255, 0.1);
+    --nuvo-nav-bg: rgba(15, 20, 25, 0.8);
+    --nuvo-input-bg: #1A2332;
     --nuvo-shadow: rgba(0, 0, 0, 0.5);
 }
 

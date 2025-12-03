@@ -6,14 +6,18 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        nuvo: {
-          green: '#2ECC71',    // Primario
-          aqua: '#1ABC9C',     // Secundario
-          purple: '#9B59B6',   // Acento
-          dark: '#2C3E50',     // Textos
-          gray: '#BDC3C7',     // Fondos
-          light: '#F5F6FA'     // Background
-        }
+        'nuvo-dark': '#0A0E1A',        // Fondo principal
+        'nuvo-card': '#141B2D',        // Fondo de cards
+        'nuvo-sidebar': '#0F1419',     // Fondo de sidebar
+        'nuvo-input': '#1A2332',       // Fondo de inputs/tablas
+        'nuvo-green': '#00E676',       // Verde principal
+        'nuvo-blue': '#3B82F6',        // Azul para badges
+        'nuvo-yellow': '#EAB308',      // Amarillo para pendientes
+        'nuvo-red': '#EF4444',         // Rojo para rechazados
+        'nuvo-text': '#FFFFFF',        // Texto principal
+        'nuvo-text-secondary': '#9CA3AF', // Texto secundario
+        'nuvo-text-disabled': '#4B5563',  // Texto deshabilitado
+        'nuvo-border': 'rgba(255, 255, 255, 0.1)', // Bordes sutiles
       }
     },
   },

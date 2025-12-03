@@ -2,8 +2,44 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Variables CSS para paleta oscura */
+:root {
+    --color-bg-primary: #0A0E1A;
+    --color-bg-card: #141B2D;
+    --color-bg-sidebar: #0F1419;
+    --color-bg-input: #1A2332;
+    --color-green: #00E676;
+    --color-blue: #3B82F6;
+    --color-yellow: #EAB308;
+    --color-red: #EF4444;
+    --color-text-primary: #FFFFFF;
+    --color-text-secondary: #9CA3AF;
+    --color-text-disabled: #4B5563;
+    --color-border: rgba(255, 255, 255, 0.1);
+}
+
 /* Estilo base global */
 body {
-    background-color: #F5F6FA;
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-primary);
     font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Scrollbar oscuro */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--color-bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-bg-input);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #2A3444;
 }
