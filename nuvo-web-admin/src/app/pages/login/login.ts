@@ -1,23 +1,29 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink, Router } from '@angular/router';
 import { AuthService } from '../../services/auth';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './login.html',
 })
 export class LoginComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
 
-  email = ''; // Vacío por defecto
+  email = '';
   password = '';
   isLoading = false;
   errorMessage = '';
+  showPassword = false;
+  rememberMe = false;
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
 
   onLogin() {
     this.isLoading = true;

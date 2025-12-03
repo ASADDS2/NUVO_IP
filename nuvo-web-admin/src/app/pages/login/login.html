@@ -1,18 +1,28 @@
-<div class="min-h-screen flex items-center justify-center bg-gray-50">
-    <!-- Login Card -->
-    <div class="bg-white p-10 rounded-3xl shadow-2xl w-full max-w-md">
+<div class="min-h-screen bg-nuvo-dark flex items-center justify-center relative">
 
-        <!-- Logo/Icon -->
+    <!-- Botón Volver al inicio -->
+    <a routerLink="/"
+        class="absolute top-8 left-8 flex items-center gap-2 text-nuvo-text-secondary hover:text-nuvo-green transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+        <span class="text-sm">Volver al inicio</span>
+    </a>
+
+    <!-- Login Card -->
+    <div class="bg-nuvo-card border border-nuvo-border rounded-2xl p-8 w-full max-w-md mx-4">
+
+        <!-- Logo -->
         <div class="flex justify-center mb-6">
             <div class="w-16 h-16 bg-nuvo-green rounded-2xl flex items-center justify-center shadow-lg">
-                <span class="text-white text-3xl font-bold">N</span>
+                <span class="text-black text-3xl font-bold">N</span>
             </div>
         </div>
 
         <!-- Title -->
         <div class="text-center mb-8">
-            <h1 class="text-2xl font-bold text-gray-800 mb-2">NUVO ADMIN</h1>
-            <p class="text-gray-500 text-sm">Inicia sesión en tu cuenta</p>
+            <h1 class="text-2xl font-bold text-nuvo-text mb-2">NUVO ADMIN</h1>
+            <p class="text-nuvo-text-secondary text-sm">Inicia sesión en tu cuenta</p>
         </div>
 
         <!-- Login Form -->
@@ -20,9 +30,9 @@
 
             <!-- Email Input -->
             <div>
-                <label class="block text-gray-700 text-sm font-semibold mb-2">Correo electrónico</label>
+                <label class="block text-nuvo-text-secondary text-sm font-medium mb-2">Correo electrónico</label>
                 <div class="relative">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-nuvo-text-disabled">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
@@ -30,27 +40,27 @@
                         </svg>
                     </span>
                     <input type="email" [(ngModel)]="email" name="email" required
-                        class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-nuvo-green focus:ring-2 focus:ring-nuvo-green/20 transition-all"
+                        class="w-full pl-12 pr-4 py-3 bg-nuvo-input border border-nuvo-border text-nuvo-text rounded-xl focus:outline-none focus:border-nuvo-green focus:ring-2 focus:ring-nuvo-green/20 transition-all placeholder-nuvo-text-disabled"
                         placeholder="admin@nuvo.com">
                 </div>
             </div>
 
             <!-- Password Input -->
             <div>
-                <label class="block text-gray-700 text-sm font-semibold mb-2">Contraseña</label>
+                <label class="block text-nuvo-text-secondary text-sm font-medium mb-2">Contraseña</label>
                 <div class="relative">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-nuvo-text-disabled">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
                             </path>
                         </svg>
                     </span>
-                    <input type="password" [(ngModel)]="password" name="password" required
-                        class="w-full pl-12 pr-12 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-nuvo-green focus:ring-2 focus:ring-nuvo-green/20 transition-all"
+                    <input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="password" name="password" required
+                        class="w-full pl-12 pr-12 py-3 bg-nuvo-input border border-nuvo-border text-nuvo-text rounded-xl focus:outline-none focus:border-nuvo-green focus:ring-2 focus:ring-nuvo-green/20 transition-all placeholder-nuvo-text-disabled"
                         placeholder="••••••••">
-                    <button type="button"
-                        class="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 hover:text-gray-600">
+                    <button type="button" (click)="togglePassword()"
+                        class="absolute inset-y-0 right-0 flex items-center pr-4 text-nuvo-text-disabled hover:text-nuvo-text transition-colors">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -64,25 +74,27 @@
 
             <!-- Remember me & Forgot password -->
             <div class="flex items-center justify-between text-sm">
-                <label class="flex items-center text-gray-600 cursor-pointer">
-                    <input type="checkbox" class="mr-2 rounded border-gray-300 text-nuvo-green focus:ring-nuvo-green">
+                <label
+                    class="flex items-center text-nuvo-text-secondary cursor-pointer hover:text-nuvo-text transition-colors">
+                    <input type="checkbox" [(ngModel)]="rememberMe" name="rememberMe"
+                        class="mr-2 w-4 h-4 rounded border-nuvo-border bg-nuvo-input text-nuvo-green focus:ring-nuvo-green focus:ring-2">
                     <span>Recordarme</span>
                 </label>
-                <a href="#" class="text-nuvo-green hover:text-green-700 font-semibold">¿Olvidaste tu contraseña?</a>
-            </div>
-
-            <!-- Error Message -->
-            <div *ngIf="errorMessage"
-                class="p-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm text-center">
-                {{ errorMessage }}
+                <a href="#" class="text-nuvo-green hover:text-green-400 transition-colors">¿Olvidaste tu contraseña?</a>
             </div>
 
             <!-- Submit Button -->
             <button type="submit" [disabled]="isLoading"
-                class="w-full bg-nuvo-green hover:bg-green-600 text-white font-bold py-3.5 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center">
-                <span *ngIf="!isLoading">Iniciar Sesión</span>
+                class="w-full bg-nuvo-green hover:bg-green-400 text-black font-bold py-3.5 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center">
+                <span *ngIf="!isLoading" class="flex items-center gap-2">
+                    Iniciar Sesión
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                    </svg>
+                </span>
                 <span *ngIf="isLoading" class="flex items-center">
-                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg"
+                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg"
                         fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
                         </circle>
@@ -96,26 +108,27 @@
         </form>
 
         <!-- Test Credentials -->
-        <div class="mt-8 p-4 bg-green-50 rounded-xl border border-green-200">
-            <p class="text-xs text-gray-600 text-center mb-2 font-semibold">Usuario de prueba:</p>
+        <div class="mt-6 p-4 bg-nuvo-input/50 rounded-xl border border-nuvo-border">
+            <p class="text-xs text-nuvo-text-secondary text-center mb-2 font-medium">Usuario de prueba:</p>
             <div class="text-center space-y-1">
-                <p class="text-sm text-nuvo-green font-mono">bruno@nuvo.com</p>
-                <p class="text-sm text-nuvo-green font-mono">password123</p>
+                <p class="text-sm text-nuvo-green font-mono">admin@nuvo.com</p>
+                <p class="text-sm text-nuvo-green font-mono">admin123</p>
             </div>
         </div>
 
         <!-- Footer -->
         <div class="mt-6 text-center">
-            <p class="text-xs text-gray-500">
+            <p class="text-xs text-nuvo-text-secondary">
                 ¿No tienes una cuenta?
-                <a href="#" class="text-nuvo-green hover:text-green-700 font-semibold">Contacta al administrador</a>
+                <a href="#" class="text-nuvo-green hover:text-green-400 transition-colors">Contacta al administrador</a>
             </p>
         </div>
 
-        <!-- Copyright -->
-        <div class="mt-6 text-center">
-            <p class="text-xs text-gray-400">© 2025 NUVO ADMIN. Todos los derechos reservados.</p>
-        </div>
-
     </div>
+
+    <!-- Copyright -->
+    <div class="absolute bottom-8 text-center w-full">
+        <p class="text-xs text-nuvo-text-disabled">© 2025 NUVO ADMIN. Todos los derechos reservados.</p>
+    </div>
+
 </div>
