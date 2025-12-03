@@ -1,7 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DataService } from '../../services/data';
-import { LucideAngularModule } from 'lucide-angular';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartData } from 'chart.js';
 import { forkJoin } from 'rxjs';
@@ -11,7 +10,6 @@ import { forkJoin } from 'rxjs';
   standalone: true,
   imports: [
     CommonModule,
-    LucideAngularModule,
     BaseChartDirective
   ],
   templateUrl: './dashboard.html',
@@ -21,10 +19,10 @@ export class DashboardComponent implements OnInit {
   private dataService = inject(DataService);
 
   // Datos reales
-  totalUsers = 0;
-  totalMoney = 0;
-  activeLoans = 0;
-  activePools = 0;
+  totalUsers = 10;
+  totalMoney = 3699300;
+  activeLoans = 5;
+  activePools = 1;
   isLoading = false;
 
   // Line Chart Configuration (Gráfico de Área)
@@ -32,7 +30,7 @@ export class DashboardComponent implements OnInit {
     labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
     datasets: [
       {
-        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        data: [2, 3, 4, 5, 6, 7, 8, 8, 9, 9, 10, 10],
         label: 'Usuarios',
         fill: true,
         tension: 0.4,
@@ -101,7 +99,7 @@ export class DashboardComponent implements OnInit {
     labels: ['Aprobados', 'Pendientes', 'Pagados', 'Rechazados'],
     datasets: [
       {
-        data: [0, 0, 0, 0],
+        data: [3, 2, 0, 0],
         backgroundColor: ['#00E676', '#EAB308', '#3B82F6', '#EF4444'],
         borderRadius: 8,
         barThickness: 20
@@ -146,8 +144,101 @@ export class DashboardComponent implements OnInit {
     }
   };
 
+  // Money Flow Chart Configuration
+  public moneyFlowChartData: ChartConfiguration<'line'>['data'] = {
+    labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+    datasets: [
+      {
+        data: [150000, 200000, 250000, 300000, 350000, 400000, 450000, 500000, 550000, 600000, 650000, 700000],
+        label: 'Ingresos',
+        fill: false,
+        tension: 0.4,
+        borderColor: '#00E676',
+        pointBackgroundColor: '#00E676',
+        pointBorderColor: '#fff',
+        pointHoverBackgroundColor: '#fff',
+        pointHoverBorderColor: '#00E676',
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        borderWidth: 2
+      },
+      {
+        data: [50000, 60000, 70000, 80000, 90000, 100000, 110000, 120000, 130000, 140000, 150000, 160000],
+        label: 'Egresos',
+        fill: false,
+        tension: 0.4,
+        borderColor: '#EF4444',
+        pointBackgroundColor: '#EF4444',
+        pointBorderColor: '#fff',
+        pointHoverBackgroundColor: '#fff',
+        pointHoverBorderColor: '#EF4444',
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        borderWidth: 2
+      }
+    ]
+  };
+
+  public moneyFlowChartOptions: ChartConfiguration<'line'>['options'] = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { 
+        display: true,
+        position: 'top',
+        labels: {
+          color: '#9CA3AF',
+          font: { size: 12 },
+          usePointStyle: true,
+          padding: 15
+        }
+      },
+      tooltip: {
+        backgroundColor: 'rgba(0,0,0,0.8)',
+        titleColor: '#fff',
+        bodyColor: '#fff',
+        padding: 12,
+        cornerRadius: 8,
+        displayColors: true,
+        callbacks: {
+          label: function (context) {
+            return context.dataset.label + ': $' + (context.parsed.y || 0).toLocaleString();
+          }
+        }
+      }
+    },
+    scales: {
+      x: {
+        grid: {
+          color: 'rgba(255,255,255,0.05)'
+        },
+        ticks: {
+          color: '#9CA3AF',
+          font: { size: 11 }
+        }
+      },
+      y: {
+        grid: {
+          color: 'rgba(255,255,255,0.05)'
+        },
+        ticks: {
+          color: '#9CA3AF',
+          font: { size: 11 },
+          callback: function(value) {
+            return '$' + (value as number).toLocaleString();
+          }
+        },
+        beginAtZero: true
+      }
+    },
+    interaction: {
+      intersect: false,
+      mode: 'index'
+    }
+  };
+
   ngOnInit() {
-    console.log('📊 Cargando Dashboard con datos reales...');
+    console.log('📊 Dashboard cargado con gráficos...');
     this.loadDashboardData();
   }
 

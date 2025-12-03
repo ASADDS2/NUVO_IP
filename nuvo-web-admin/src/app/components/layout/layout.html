@@ -15,7 +15,7 @@
         <div class="px-6 py-6 border-b border-nuvo-border">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 bg-nuvo-green rounded-full flex items-center justify-center">
-                    <i-lucide name="user" class="w-5 h-5 text-black"></i-lucide>
+                    <span class="text-black font-bold text-sm">👤</span>
                 </div>
                 <div class="flex-1">
                     <div class="text-nuvo-text text-sm font-semibold">Administrador</div>
@@ -29,26 +29,26 @@
 
             <a routerLink="/dashboard" routerLinkActive="bg-nuvo-green/10 text-nuvo-green border-l-4 border-nuvo-green"
                 class="flex items-center gap-3 px-4 py-3 text-nuvo-text-secondary rounded-lg transition-all duration-200 hover:bg-white/5 hover:text-nuvo-green cursor-pointer border-l-4 border-transparent">
-                <i-lucide name="layout-dashboard" class="w-5 h-5"></i-lucide>
+                <span class="text-lg">📊</span>
                 <span class="font-medium">Dashboard</span>
             </a>
 
             <a routerLink="/accounts" routerLinkActive="bg-nuvo-green/10 text-nuvo-green border-l-4 border-nuvo-green"
                 class="flex items-center gap-3 px-4 py-3 text-nuvo-text-secondary rounded-lg transition-all duration-200 hover:bg-white/5 hover:text-nuvo-green cursor-pointer border-l-4 border-transparent">
-                <i-lucide name="users" class="w-5 h-5"></i-lucide>
+                <span class="text-lg">👥</span>
                 <span class="font-medium">Cuentas</span>
             </a>
 
             <a routerLink="/loans" routerLinkActive="bg-nuvo-green/10 text-nuvo-green border-l-4 border-nuvo-green"
                 class="flex items-center gap-3 px-4 py-3 text-nuvo-text-secondary rounded-lg transition-all duration-200 hover:bg-white/5 hover:text-nuvo-green cursor-pointer border-l-4 border-transparent">
-                <i-lucide name="credit-card" class="w-5 h-5"></i-lucide>
+                <span class="text-lg">💳</span>
                 <span class="font-medium">Préstamos</span>
             </a>
 
             <a routerLink="/pool/manage"
                 routerLinkActive="bg-nuvo-green/10 text-nuvo-green border-l-4 border-nuvo-green"
                 class="flex items-center gap-3 px-4 py-3 text-nuvo-text-secondary rounded-lg transition-all duration-200 hover:bg-white/5 hover:text-nuvo-green cursor-pointer border-l-4 border-transparent">
-                <i-lucide name="settings" class="w-5 h-5"></i-lucide>
+                <span class="text-lg">⚙️</span>
                 <span class="font-medium">Gestionar Pools</span>
             </a>
 
@@ -59,7 +59,7 @@
             <!-- Logout Button -->
             <button (click)="onLogout()"
                 class="flex items-center gap-3 w-full px-4 py-3 text-red-400 hover:bg-red-500/10 rounded-lg transition-all">
-                <i-lucide name="log-out" class="w-5 h-5"></i-lucide>
+                <span class="text-lg">🚪</span>
                 <span class="font-medium">Cerrar Sesión</span>
             </button>
         </div>

@@ -9,9 +9,6 @@ import { PoolComponent } from './pages/pool/pool';
 import { PoolManagementComponent } from './pages/pool-management/pool-management';
 
 export const routes: Routes = [
-    // Ruta raíz es la Landing Page
-    { path: '', component: LandingComponent, pathMatch: 'full' },
-
     // Página de login
     { path: 'login', component: LoginComponent },
 
@@ -20,6 +17,7 @@ export const routes: Routes = [
         path: '',
         component: LayoutComponent,
         children: [
+            { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
             { path: 'dashboard', component: DashboardComponent },
             { path: 'accounts', component: AccountsComponent },
             { path: 'loans', component: LoansComponent },
@@ -29,6 +27,9 @@ export const routes: Routes = [
         ]
     },
 
-    // Cualquier otra ruta redirige a la landing
-    { path: '**', redirectTo: '' }
+    // Landing page (sin layout)
+    { path: 'landing', component: LandingComponent },
+
+    // Cualquier otra ruta redirige al dashboard
+    { path: '**', redirectTo: 'dashboard' }
 ];

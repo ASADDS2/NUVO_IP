@@ -2,51 +2,55 @@
 
 /* Cards de Estadísticas con Gradientes */
 .stat-card-green-dark {
-    background: linear-gradient(135deg, #0a4d3c 0%, #063828 100%);
-    border: 1px solid rgba(0, 230, 118, 0.1);
+    background: linear-gradient(135deg, #0f4d3c 0%, #0a3a2e 100%);
+    border: 1px solid rgba(0, 230, 118, 0.25);
     transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 230, 118, 0.08);
 }
 
 .stat-card-green-dark:hover {
-    border-color: rgba(0, 230, 118, 0.3);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(0, 230, 118, 0.1);
+    border-color: rgba(0, 230, 118, 0.4);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 230, 118, 0.15);
 }
 
 .stat-card-green-light {
-    background: linear-gradient(135deg, #0d5c47 0%, #0a4d3c 100%);
-    border: 1px solid rgba(0, 230, 118, 0.15);
+    background: linear-gradient(135deg, #1a6b55 0%, #0f4d3c 100%);
+    border: 1px solid rgba(0, 230, 118, 0.25);
     transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 230, 118, 0.08);
 }
 
 .stat-card-green-light:hover {
-    border-color: rgba(0, 230, 118, 0.3);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(0, 230, 118, 0.15);
+    border-color: rgba(0, 230, 118, 0.4);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 230, 118, 0.15);
 }
 
 .stat-card-brown {
-    background: linear-gradient(135deg, #4a3520 0%, #3a2a18 100%);
-    border: 1px solid rgba(251, 146, 60, 0.1);
+    background: linear-gradient(135deg, #5a4030 0%, #3f2a1a 100%);
+    border: 1px solid rgba(251, 146, 60, 0.25);
     transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(251, 146, 60, 0.08);
 }
 
 .stat-card-brown:hover {
-    border-color: rgba(251, 146, 60, 0.3);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(251, 146, 60, 0.1);
+    border-color: rgba(251, 146, 60, 0.4);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(251, 146, 60, 0.15);
 }
 
 .stat-card-blue {
-    background: linear-gradient(135deg, #1e3a5f 0%, #152a47 100%);
-    border: 1px solid rgba(59, 130, 246, 0.1);
+    background: linear-gradient(135deg, #1e4a6f 0%, #0f3a57 100%);
+    border: 1px solid rgba(59, 130, 246, 0.25);
     transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.08);
 }
 
 .stat-card-blue:hover {
-    border-color: rgba(59, 130, 246, 0.3);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.1);
+    border-color: rgba(59, 130, 246, 0.4);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(59, 130, 246, 0.15);
 }
 
 /* Animaciones */
