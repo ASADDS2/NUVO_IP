@@ -1,9 +1,9 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DataService } from '../../services/data';
-import { LucideAngularModule, Users, DollarSign, CreditCard, Layers, TrendingUp, Activity, PieChart, Download, Plus } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
 import { BaseChartDirective } from 'ng2-charts';
-import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
+import { ChartConfiguration, ChartData } from 'chart.js';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,7 +13,6 @@ import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
     LucideAngularModule,
     BaseChartDirective
   ],
-
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css']
 })
@@ -24,21 +23,24 @@ export class DashboardComponent implements OnInit {
   totalMoney = 0;
   isLoading = true;
 
-  // Line Chart Configuration
+  // Line Chart Configuration (Gráfico de Área)
   public lineChartData: ChartConfiguration<'line'>['data'] = {
-    labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul'],
+    labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
     datasets: [
       {
-        data: [65, 59, 80, 81, 56, 55, 40],
-        label: 'Usuarios Activos',
+        data: [3, 4, 5, 6, 7, 8, 9, 10, 11, 11, 12, 12],
+        label: 'Usuarios',
         fill: true,
         tension: 0.4,
         borderColor: '#00E676',
-        backgroundColor: 'rgba(0, 230, 118, 0.1)',
+        backgroundColor: 'rgba(0, 230, 118, 0.2)',
         pointBackgroundColor: '#00E676',
         pointBorderColor: '#fff',
         pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: 'rgba(148,159,177,0.8)'
+        pointHoverBorderColor: '#00E676',
+        pointRadius: 0,
+        pointHoverRadius: 6,
+        borderWidth: 3
       }
     ]
   };
@@ -52,56 +54,95 @@ export class DashboardComponent implements OnInit {
         backgroundColor: 'rgba(0,0,0,0.8)',
         titleColor: '#fff',
         bodyColor: '#fff',
-        padding: 10,
+        padding: 12,
+        cornerRadius: 8,
+        displayColors: false,
+        callbacks: {
+          label: function (context) {
+            return context.parsed.y + ' usuarios';
+          }
+        }
+      }
+    },
+    scales: {
+      x: {
+        grid: {
+          color: 'rgba(255,255,255,0.05)'
+        },
+        ticks: {
+          color: '#9CA3AF',
+          font: { size: 11 }
+        }
+      },
+      y: {
+        grid: {
+          color: 'rgba(255,255,255,0.05)'
+        },
+        ticks: {
+          color: '#9CA3AF',
+          font: { size: 11 },
+          stepSize: 3
+        },
+        beginAtZero: true,
+        max: 12
+      }
+    },
+    interaction: {
+      intersect: false,
+      mode: 'index'
+    }
+  };
+
+  // Bar Chart Configuration (Barras Horizontales)
+  public barChartData: ChartData<'bar'> = {
+    labels: ['Aprobados', 'Pendientes', 'Pagados', 'Rechazados'],
+    datasets: [
+      {
+        data: [3, 0.75, 2.25, 0.5],
+        backgroundColor: ['#00E676', '#EAB308', '#3B82F6', '#EF4444'],
+        borderRadius: 8,
+        barThickness: 20
+      }
+    ]
+  };
+
+  public barChartOptions: ChartConfiguration<'bar'>['options'] = {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: 'rgba(0,0,0,0.8)',
+        titleColor: '#fff',
+        bodyColor: '#fff',
+        padding: 12,
         cornerRadius: 8,
         displayColors: false
       }
     },
     scales: {
       x: {
-        grid: { color: 'rgba(255,255,255,0.05)' },
-        ticks: { color: '#888' }
+        grid: {
+          color: 'rgba(255,255,255,0.05)'
+        },
+        ticks: {
+          color: '#9CA3AF',
+          font: { size: 11 }
+        },
+        max: 4
       },
       y: {
-        grid: { color: 'rgba(255,255,255,0.05)' },
-        ticks: { color: '#888' },
-        beginAtZero: true
+        grid: {
+          display: false
+        },
+        ticks: {
+          color: '#9CA3AF',
+          font: { size: 11 }
+        }
       }
     }
   };
-
-  // Doughnut Chart Configuration
-  public doughnutChartData: ChartData<'doughnut'> = {
-    labels: ['Aprobados', 'Pendientes', 'Rechazados'],
-    datasets: [
-      {
-        data: [350, 45, 20],
-        backgroundColor: ['#00E676', '#EAB308', '#EF4444'],
-        hoverBackgroundColor: ['#00c865', '#CA8A04', '#DC2626'],
-        borderWidth: 0,
-        hoverOffset: 4
-      }
-    ]
-  };
-
-  public doughnutChartOptions: ChartConfiguration<'doughnut'>['options'] = {
-    responsive: true,
-    maintainAspectRatio: false,
-    cutout: '75%',
-    plugins: {
-      legend: { display: false }
-    }
-  };
-
-  constructor() {
-    // Register icons
-    // Note: In standalone components with LucideAngularModule, icons are usually imported in the imports array
-    // or registered in a provider if using a global registry. 
-    // Here we import the module which should handle it if configured correctly, 
-    // but for specific icons we might need to import them.
-    // However, LucideAngularModule usually works with icons as components or via name if configured.
-    // Let's assume standard usage for now.
-  }
 
   ngOnInit() {
     console.log('📊 Cargando Dashboard...');
