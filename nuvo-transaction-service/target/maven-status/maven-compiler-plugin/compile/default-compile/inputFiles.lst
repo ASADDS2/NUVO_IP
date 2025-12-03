@@ -1,0 +1,15 @@
+/home/Coder/Imágenes/NUVO_IP/nuvo-transaction-service/src/main/java/com/nuvo/transaction/TransactionApplication.java
+/home/Coder/Imágenes/NUVO_IP/nuvo-transaction-service/src/main/java/com/nuvo/transaction/application/services/TransactionService.java
+/home/Coder/Imágenes/NUVO_IP/nuvo-transaction-service/src/main/java/com/nuvo/transaction/application/services/TransferRequest.java
+/home/Coder/Imágenes/NUVO_IP/nuvo-transaction-service/src/main/java/com/nuvo/transaction/domain/model/Transaction.java
+/home/Coder/Imágenes/NUVO_IP/nuvo-transaction-service/src/main/java/com/nuvo/transaction/domain/ports/in/DepositUseCase.java
+/home/Coder/Imágenes/NUVO_IP/nuvo-transaction-service/src/main/java/com/nuvo/transaction/domain/ports/in/GetHistoryUseCase.java
+/home/Coder/Imágenes/NUVO_IP/nuvo-transaction-service/src/main/java/com/nuvo/transaction/domain/ports/in/TransferUseCase.java
+/home/Coder/Imágenes/NUVO_IP/nuvo-transaction-service/src/main/java/com/nuvo/transaction/domain/ports/out/AccountPort.java
+/home/Coder/Imágenes/NUVO_IP/nuvo-transaction-service/src/main/java/com/nuvo/transaction/domain/ports/out/TransactionRepositoryPort.java
+/home/Coder/Imágenes/NUVO_IP/nuvo-transaction-service/src/main/java/com/nuvo/transaction/infrastructure/adapters/AccountAdapter.java
+/home/Coder/Imágenes/NUVO_IP/nuvo-transaction-service/src/main/java/com/nuvo/transaction/infrastructure/adapters/TransactionRepositoryAdapter.java
+/home/Coder/Imágenes/NUVO_IP/nuvo-transaction-service/src/main/java/com/nuvo/transaction/infrastructure/client/AccountClient.java
+/home/Coder/Imágenes/NUVO_IP/nuvo-transaction-service/src/main/java/com/nuvo/transaction/infrastructure/controllers/TransactionController.java
+/home/Coder/Imágenes/NUVO_IP/nuvo-transaction-service/src/main/java/com/nuvo/transaction/infrastructure/entities/TransactionEntity.java
+/home/Coder/Imágenes/NUVO_IP/nuvo-transaction-service/src/main/java/com/nuvo/transaction/infrastructure/repositories/JpaTransactionRepository.java
