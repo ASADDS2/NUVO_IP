@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, ChangeDetectorRef, importProvidersFrom } from '@angular/core';
+import { Component, OnInit, inject, importProvidersFrom } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DataService } from '../../services/data';
 import { LucideAngularModule, Users, DollarSign, CreditCard, Layers, TrendingUp, Activity, PieChart, Download, Plus } from 'lucide-angular';
@@ -23,7 +23,6 @@ import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
 })
 export class DashboardComponent implements OnInit {
   private dataService = inject(DataService);
-  private cdr = inject(ChangeDetectorRef);
 
   totalUsers = 0;
   totalMoney = 0;
@@ -121,12 +120,10 @@ export class DashboardComponent implements OnInit {
         }
 
         this.isLoading = false;
-        this.cdr.detectChanges();
       },
       error: (err: any) => {
         console.error('❌ Error en Dashboard:', err);
         this.isLoading = false;
-        this.cdr.detectChanges();
       }
     });
   }
