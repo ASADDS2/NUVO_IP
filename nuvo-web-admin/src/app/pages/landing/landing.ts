@@ -1,4 +1,4 @@
-import { Component, importProvidersFrom } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { LucideAngularModule, BarChart2, Users, Wallet, TrendingUp, PieChart, Shield, Mail, Phone, MapPin, CheckCircle, ArrowRight } from 'lucide-angular';
@@ -7,11 +7,7 @@ import { LucideAngularModule, BarChart2, Users, Wallet, TrendingUp, PieChart, Sh
     selector: 'app-landing',
     standalone: true,
     imports: [CommonModule, RouterLink, LucideAngularModule],
-    providers: [
-        importProvidersFrom(LucideAngularModule.pick({
-            BarChart2, Users, Wallet, TrendingUp, PieChart, Shield, Mail, Phone, MapPin, CheckCircle, ArrowRight
-        }))
-    ],
+
     templateUrl: './landing.html',
     styleUrls: ['./landing.css']
 })

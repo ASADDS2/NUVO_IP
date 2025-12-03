@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, importProvidersFrom } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DataService } from '../../services/data';
 import { LucideAngularModule, Users, DollarSign, CreditCard, Layers, TrendingUp, Activity, PieChart, Download, Plus } from 'lucide-angular';
@@ -13,11 +13,7 @@ import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
     LucideAngularModule,
     BaseChartDirective
   ],
-  providers: [
-    importProvidersFrom(LucideAngularModule.pick({
-      Users, DollarSign, CreditCard, Layers, TrendingUp, Activity, PieChart, Download, Plus
-    }))
-  ],
+
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css']
 })
