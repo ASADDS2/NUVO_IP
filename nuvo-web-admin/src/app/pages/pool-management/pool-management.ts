@@ -85,25 +85,144 @@ export class PoolManagementComponent implements OnInit, OnDestroy {
   }
 
   openCreateForm() {
-    this.showForm = true;
-    this.selectedPool = null;
-    this.newPool = {
-      name: '',
-      description: '',
-      interestRatePerDay: 0.01,
-      maxParticipants: 50
-    };
+    Swal.fire({
+      title: 'Crear Nuevo Pool',
+      html: `
+        <div class="text-left space-y-4">
+          <div>
+            <label class="block text-sm font-semibold text-gray-300 mb-2">Nombre *</label>
+            <input id="poolName" type="text" placeholder="Ej: Pool VIP" 
+              class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white placeholder-gray-400 focus:border-green-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-300 mb-2">Descripción</label>
+            <textarea id="poolDesc" placeholder="Descripción del pool" rows="3"
+              class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white placeholder-gray-400 focus:border-green-500 focus:outline-none"></textarea>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-300 mb-2">Tasa de Interés Diaria * (%)</label>
+            <input id="poolRate" type="number" step="0.001" min="0" max="1" placeholder="0.01" value="0.01"
+              class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white placeholder-gray-400 focus:border-green-500 focus:outline-none">
+            <p class="text-xs text-gray-400 mt-1">Ejemplo: 0.01 = 1% diario</p>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-300 mb-2">Máximo de Participantes *</label>
+            <input id="poolMax" type="number" min="1" placeholder="50" value="50"
+              class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white placeholder-gray-400 focus:border-green-500 focus:outline-none">
+          </div>
+        </div>
+      `,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#10b981',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: '✓ Crear Pool',
+      cancelButtonText: 'Cancelar',
+      background: '#1f2937',
+      color: '#fff',
+      didOpen: () => {
+        const nameInput = document.getElementById('poolName') as HTMLInputElement;
+        if (nameInput) nameInput.focus();
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const name = (document.getElementById('poolName') as HTMLInputElement)?.value;
+        const description = (document.getElementById('poolDesc') as HTMLTextAreaElement)?.value;
+        const rate = parseFloat((document.getElementById('poolRate') as HTMLInputElement)?.value || '0.01');
+        const maxParticipants = parseInt((document.getElementById('poolMax') as HTMLInputElement)?.value || '50');
+
+        if (!name) {
+          Swal.fire({
+            title: 'Error',
+            text: 'El nombre del pool es requerido',
+            icon: 'error',
+            confirmButtonColor: '#ef4444',
+            background: '#1f2937',
+            color: '#fff'
+          });
+          return;
+        }
+
+        this.newPool = {
+          name,
+          description,
+          interestRatePerDay: rate,
+          maxParticipants
+        };
+        this.createPool();
+      }
+    });
   }
 
   openEditForm(pool: Pool) {
-    this.showForm = true;
-    this.selectedPool = pool;
-    this.newPool = {
-      name: pool.name,
-      description: pool.description,
-      interestRatePerDay: pool.interestRatePerDay,
-      maxParticipants: pool.maxParticipants
-    };
+    Swal.fire({
+      title: 'Editar Pool',
+      html: `
+        <div class="text-left space-y-4">
+          <div>
+            <label class="block text-sm font-semibold text-gray-300 mb-2">Nombre *</label>
+            <input id="poolName" type="text" placeholder="Ej: Pool VIP" value="${pool.name}"
+              class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white placeholder-gray-400 focus:border-green-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-300 mb-2">Descripción</label>
+            <textarea id="poolDesc" placeholder="Descripción del pool" rows="3"
+              class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white placeholder-gray-400 focus:border-green-500 focus:outline-none">${pool.description}</textarea>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-300 mb-2">Tasa de Interés Diaria * (%)</label>
+            <input id="poolRate" type="number" step="0.001" min="0" max="1" value="${pool.interestRatePerDay}"
+              class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white placeholder-gray-400 focus:border-green-500 focus:outline-none">
+            <p class="text-xs text-gray-400 mt-1">Ejemplo: 0.01 = 1% diario</p>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-300 mb-2">Máximo de Participantes *</label>
+            <input id="poolMax" type="number" min="1" value="${pool.maxParticipants}"
+              class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white placeholder-gray-400 focus:border-green-500 focus:outline-none">
+          </div>
+        </div>
+      `,
+      icon: 'info',
+      showCancelButton: true,
+      confirmButtonColor: '#10b981',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: '✓ Actualizar',
+      cancelButtonText: 'Cancelar',
+      background: '#1f2937',
+      color: '#fff',
+      didOpen: () => {
+        const nameInput = document.getElementById('poolName') as HTMLInputElement;
+        if (nameInput) nameInput.focus();
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const name = (document.getElementById('poolName') as HTMLInputElement)?.value;
+        const description = (document.getElementById('poolDesc') as HTMLTextAreaElement)?.value;
+        const rate = parseFloat((document.getElementById('poolRate') as HTMLInputElement)?.value || '0.01');
+        const maxParticipants = parseInt((document.getElementById('poolMax') as HTMLInputElement)?.value || '50');
+
+        if (!name) {
+          Swal.fire({
+            title: 'Error',
+            text: 'El nombre del pool es requerido',
+            icon: 'error',
+            confirmButtonColor: '#ef4444',
+            background: '#1f2937',
+            color: '#fff'
+          });
+          return;
+        }
+
+        this.selectedPool = pool;
+        this.newPool = {
+          name,
+          description,
+          interestRatePerDay: rate,
+          maxParticipants
+        };
+        this.updatePool();
+      }
+    });
   }
 
   closeForm() {
