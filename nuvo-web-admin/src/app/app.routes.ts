@@ -9,12 +9,16 @@ import { PoolComponent } from './pages/pool/pool';
 import { PoolManagementComponent } from './pages/pool-management/pool-management';
 
 export const routes: Routes = [
+    // Landing page (sin layout) - Página de inicio
+    { path: '', component: LandingComponent },
+    { path: 'landing', component: LandingComponent },
+
     // Página de login
     { path: 'login', component: LoginComponent },
 
     // Rutas protegidas (dentro del Layout)
     {
-        path: '',
+        path: 'app',
         component: LayoutComponent,
         children: [
             { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -27,9 +31,6 @@ export const routes: Routes = [
         ]
     },
 
-    // Landing page (sin layout)
-    { path: 'landing', component: LandingComponent },
-
-    // Cualquier otra ruta redirige al dashboard
-    { path: '**', redirectTo: 'dashboard' }
+    // Cualquier otra ruta redirige a landing
+    { path: '**', redirectTo: '' }
 ];

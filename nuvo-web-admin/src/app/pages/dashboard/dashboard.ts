@@ -4,6 +4,7 @@ import { DataService } from '../../services/data';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartData } from 'chart.js';
 import { forkJoin } from 'rxjs';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-dashboard',
@@ -273,10 +274,36 @@ export class DashboardComponent implements OnInit {
         }
 
         this.isLoading = false;
+
+        // Mostrar notificación de éxito
+        Swal.fire({
+          title: '¡Dashboard Actualizado!',
+          html: `<div class="text-left">
+            <p>✓ ${data.accounts?.length || 0} cuentas</p>
+            <p>✓ ${data.loans?.length || 0} préstamos</p>
+            <p>✓ ${data.pools?.length || 0} pools</p>
+          </div>`,
+          icon: 'success',
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 2500,
+          background: '#1f2937',
+          color: '#fff'
+        });
       },
       error: (err) => {
         console.error('❌ Error cargando dashboard:', err);
         this.isLoading = false;
+
+        Swal.fire({
+          title: 'Error',
+          text: 'No se pudieron cargar los datos del dashboard',
+          icon: 'error',
+          confirmButtonColor: '#ef4444',
+          background: '#1f2937',
+          color: '#fff'
+        });
       }
     });
   }

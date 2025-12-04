@@ -1,6 +1,7 @@
 import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DataService } from '../../services/data';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-accounts',
@@ -35,12 +36,36 @@ export class AccountsComponent implements OnInit {
         }
 
         this.isLoading = false;
-        this.cdr.detectChanges(); // ⚡ Fuerza la actualización
+        this.cdr.detectChanges(); // 
+
+        // Mostrar notificación de éxito
+        if (this.accounts.length > 0) {
+          Swal.fire({
+            title: '!Cuentas Cargadas!',
+            text: `Se cargaron ${this.accounts.length} cuenta(s) exitosamente`,
+            icon: 'success',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 2000,
+            background: '#1f2937',
+            color: '#fff'
+          });
+        }
       },
       error: (err: any) => {
-        console.error('❌ Error cargando cuentas:', err);
+        console.error(': ', err);
         this.isLoading = false;
         this.cdr.detectChanges();
+
+        Swal.fire({
+          title: 'Error',
+          text: 'No se pudieron cargar las cuentas',
+          icon: 'error',
+          confirmButtonColor: '#ef4444',
+          background: '#1f2937',
+          color: '#fff'
+        });
       }
     });
   }

@@ -1,12 +1,12 @@
 <div class="min-h-screen bg-nuvo-dark p-8">
   <!-- Header -->
-  <div class="mb-8">
+  <div class="mb-8 animate-slide-down">
     <h1 class="text-4xl font-bold text-white mb-2">Solicitudes de Préstamos</h1>
     <p class="text-gray-400">Gestiona y aprueba solicitudes de préstamos</p>
   </div>
 
   <!-- Stats Cards -->
-  <div class="grid grid-cols-1 md:grid-cols-5 gap-6 mb-12">
+  <div class="grid grid-cols-1 md:grid-cols-5 gap-6 mb-12 animate-stagger">
     <!-- Total Préstamos -->
     <div class="bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg p-6 border border-blue-500/20">
       <div class="flex items-center justify-between mb-4">
@@ -59,7 +59,7 @@
   </div>
 
   <!-- Loans Table -->
-  <div *ngIf="!isLoading" class="bg-gray-900 rounded-lg border border-gray-800 overflow-hidden">
+  <div *ngIf="!isLoading" class="bg-gray-900 rounded-lg border border-gray-800 overflow-hidden animate-slide-up">
     <div class="overflow-x-auto">
       <table class="w-full text-left">
         <thead class="bg-gray-800 border-b border-gray-700">
@@ -72,7 +72,7 @@
             <th class="px-6 py-4 text-sm font-semibold text-gray-300">ACCIÓN</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-gray-700">
+        <tbody class="divide-y divide-gray-700 animate-stagger">
           <tr *ngFor="let loan of loans" class="hover:bg-gray-800/50 transition-colors">
             <td class="px-6 py-4 text-sm font-medium text-gray-300">#{{ loan.userId }}</td>
             <td class="px-6 py-4 text-sm font-bold text-green-400">{{ loan.amount | currency:'USD':'symbol':'1.0-0' }}</td>
