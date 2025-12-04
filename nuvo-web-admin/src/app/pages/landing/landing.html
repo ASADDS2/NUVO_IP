@@ -197,12 +197,12 @@
             <p class="text-gray-400">Guiados por principios sólidos hacia un futuro financiero más accesible</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 animate-stagger">
             <!-- Mission Card -->
-            <div class="nuvo-card p-10 rounded-3xl group hover:border-nuvo-green/50 transition-all duration-500">
+            <div class="nuvo-card p-10 rounded-3xl group hover:border-nuvo-green/50 transition-all duration-500 border-green-500/20">
                 <div
                     class="w-14 h-14 bg-green-900/30 rounded-2xl flex items-center justify-center mb-6 border border-green-500/20 group-hover:scale-110 transition-transform duration-300">
-                    <i-lucide name="trending-up" class="w-7 h-7 text-nuvo-green"></i-lucide>
+                    <span class="text-2xl">📈</span>
                 </div>
                 <h3 class="text-2xl font-bold mb-4 text-white">Nuestra Misión</h3>
                 <p class="text-gray-400 mb-8 leading-relaxed">
@@ -210,20 +210,28 @@
                     avanzadas para gestionar sus cuentas, acceder a préstamos justos y participar en oportunidades de
                     inversión rentables, todo con la máxima seguridad y transparencia.
                 </p>
-                <ul class="space-y-4">
-                    <li *ngFor="let point of missionPoints" class="flex items-center gap-3 text-gray-300">
-                        <i-lucide name="check-circle" class="w-5 h-5 text-nuvo-green flex-shrink-0"></i-lucide>
-                        {{point}}
+                <ul class="space-y-3">
+                    <li class="flex items-center gap-3 text-gray-300">
+                        <span class="text-nuvo-green text-lg">✓</span>
+                        <span>Acceso financiero para todos</span>
+                    </li>
+                    <li class="flex items-center gap-3 text-gray-300">
+                        <span class="text-nuvo-green text-lg">✓</span>
+                        <span>Tasas competitivas y justas</span>
+                    </li>
+                    <li class="flex items-center gap-3 text-gray-300">
+                        <span class="text-nuvo-green text-lg">✓</span>
+                        <span>Tecnología de vanguardia</span>
                     </li>
                 </ul>
             </div>
 
             <!-- Vision Card -->
             <div
-                class="nuvo-card p-10 rounded-3xl group hover:border-blue-500/50 transition-all duration-500 delay-200">
+                class="nuvo-card p-10 rounded-3xl group hover:border-blue-500/50 transition-all duration-500 border-blue-500/20">
                 <div
                     class="w-14 h-14 bg-blue-900/30 rounded-2xl flex items-center justify-center mb-6 border border-blue-500/20 group-hover:scale-110 transition-transform duration-300">
-                    <i-lucide name="pie-chart" class="w-7 h-7 text-blue-400"></i-lucide>
+                    <span class="text-2xl">⏰</span>
                 </div>
                 <h3 class="text-2xl font-bold mb-4 text-white">Nuestra Visión</h3>
                 <p class="text-gray-400 mb-8 leading-relaxed">
@@ -231,10 +239,18 @@
                     innovación, confiabilidad y compromiso con el bienestar financiero de millones de personas y
                     empresas que confían en nosotros para alcanzar sus metas.
                 </p>
-                <ul class="space-y-4">
-                    <li *ngFor="let point of visionPoints" class="flex items-center gap-3 text-gray-300">
-                        <i-lucide name="check-circle" class="w-5 h-5 text-blue-400 flex-shrink-0"></i-lucide>
-                        {{point}}
+                <ul class="space-y-3">
+                    <li class="flex items-center gap-3 text-gray-300">
+                        <span class="text-blue-400 text-lg">✓</span>
+                        <span>Liderazgo regional</span>
+                    </li>
+                    <li class="flex items-center gap-3 text-gray-300">
+                        <span class="text-blue-400 text-lg">✓</span>
+                        <span>Innovación continua</span>
+                    </li>
+                    <li class="flex items-center gap-3 text-gray-300">
+                        <span class="text-blue-400 text-lg">✓</span>
+                        <span>Impacto social positivo</span>
                     </li>
                 </ul>
             </div>
