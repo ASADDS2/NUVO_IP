@@ -14,6 +14,10 @@ import Swal from 'sweetalert2';
 export class LayoutComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
+  
+  get currentUser() {
+    return this.authService.getCurrentUser();
+  }
 
   onLogout() {
     Swal.fire({

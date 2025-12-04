@@ -8,6 +8,8 @@ import { LoansComponent } from './pages/loans/loans';
 import { PoolComponent } from './pages/pool/pool';
 import { PoolManagementComponent } from './pages/pool-management/pool-management';
 
+import { authGuard } from './guards/auth.guard';
+
 export const routes: Routes = [
     // Landing page (sin layout) - Página de inicio
     { path: '', component: LandingComponent },
@@ -20,6 +22,7 @@ export const routes: Routes = [
     {
         path: 'app',
         component: LayoutComponent,
+        canActivate: [authGuard],
         children: [
             { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
             { path: 'dashboard', component: DashboardComponent },
