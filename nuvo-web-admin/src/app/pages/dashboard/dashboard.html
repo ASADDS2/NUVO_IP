@@ -1,0 +1,70 @@
+<div class="min-h-screen bg-nuvo-dark p-8">
+  <!-- Header -->
+  <div class="mb-8 animate-slide-down">
+    <h1 class="text-4xl font-bold text-white mb-2">Dashboard</h1>
+    <p class="text-gray-400">Bienvenido al panel de administración de NUVO</p>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12 animate-stagger">
+    <!-- Card 1 -->
+    <div class="bg-gradient-to-br from-green-900 to-green-800 rounded-lg p-6 border border-green-500/20">
+      <div class="text-green-400 text-sm font-semibold uppercase mb-2">Usuarios Totales</div>
+      <div class="text-4xl font-bold text-white mb-2">{{ totalUsers }}</div>
+      <div class="text-green-300 text-xs">Registrados en BD</div>
+      <div class="text-green-400 text-xs mt-3">+12% vs mes anterior</div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="bg-gradient-to-br from-green-800 to-green-700 rounded-lg p-6 border border-green-500/20">
+      <div class="text-green-400 text-sm font-semibold uppercase mb-2">Dinero Custodiado</div>
+      <div class="text-4xl font-bold text-white mb-2">{{ totalMoney | currency:'USD':'symbol':'1.0-0' }}</div>
+      <div class="text-green-300 text-xs">Balance Global</div>
+      <div class="text-green-400 text-xs mt-3">+8% vs mes anterior</div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="bg-gradient-to-br from-amber-900 to-amber-800 rounded-lg p-6 border border-amber-600/20">
+      <div class="text-amber-400 text-sm font-semibold uppercase mb-2">Préstamos Activos</div>
+      <div class="text-4xl font-bold text-white mb-2">{{ activeLoans }}</div>
+      <div class="text-amber-300 text-xs">En proceso</div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg p-6 border border-blue-500/20">
+      <div class="text-blue-400 text-sm font-semibold uppercase mb-2">Pools Activos</div>
+      <div class="text-4xl font-bold text-white mb-2">{{ activePools }}</div>
+      <div class="text-blue-300 text-xs">Generando rendimientos</div>
+    </div>
+  </div>
+
+  <!-- Charts Row 1 -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6 animate-stagger">
+    <!-- Crecimiento de Usuarios -->
+    <div class="lg:col-span-2 bg-gray-900 rounded-lg p-6 border border-gray-800 animate-slide-up">
+      <h3 class="text-lg font-bold text-white mb-1">Crecimiento de Usuarios</h3>
+      <p class="text-gray-400 text-sm mb-6">Usuarios registrados por mes</p>
+      <div class="h-80">
+        <canvas baseChart [data]="lineChartData" [options]="lineChartOptions" [type]="'line'"></canvas>
+      </div>
+    </div>
+
+    <!-- Estado de Préstamos -->
+    <div class="bg-gray-900 rounded-lg p-6 border border-gray-800">
+      <h3 class="text-lg font-bold text-white mb-1">Estado de Préstamos</h3>
+      <p class="text-gray-400 text-sm mb-6">Distribución por estado</p>
+      <div class="h-80">
+        <canvas baseChart [data]="barChartData" [options]="barChartOptions" [type]="'bar'"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Flujo de Dinero -->
+  <div class="bg-gray-900 rounded-lg p-6 border border-gray-800">
+    <h3 class="text-lg font-bold text-white mb-1">Flujo de Dinero</h3>
+    <p class="text-gray-400 text-sm mb-6">Ingresos vs Egresos mensuales</p>
+    <div class="h-80">
+      <canvas baseChart [data]="moneyFlowChartData" [options]="moneyFlowChartOptions" [type]="'line'"></canvas>
+    </div>
+  </div>
+</div>

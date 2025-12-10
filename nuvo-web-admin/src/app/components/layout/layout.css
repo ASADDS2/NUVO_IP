@@ -1,0 +1,20 @@
+/* Layout Sidebar - Paleta Oscura */
+.sidebar-item-active {
+    background-color: rgba(0, 230, 118, 0.1);
+    color: var(--color-green);
+    border-left: 4px solid var(--color-green);
+}
+
+/* Smooth transitions */
+nav a {
+    transition: all 0.2s ease;
+}
+
+nav a:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Theme toggle animation */
+button .transform {
+    transition: transform 0.3s ease;
+}
