@@ -3,9 +3,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/api_service.dart';
 import '../theme/nuvo_gradients.dart';
+import '../models/pool_model.dart';
 
 class PoolInvestForm extends StatefulWidget {
-  final Map<String, dynamic> pool;
+  final Pool pool;
   final VoidCallback onInvestSuccess;
   final VoidCallback onBack;
 
@@ -29,10 +30,10 @@ class _PoolInvestFormState extends State<PoolInvestForm> {
     if (_amountCtrl.text.isEmpty) return;
     final amount = double.tryParse(_amountCtrl.text);
 
-    if (amount == null || amount < widget.pool['min']) {
+    if (amount == null || amount <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("El monto mínimo es \$${widget.pool['min']}"),
+        const SnackBar(
+          content: Text("Ingrese un monto válido"),
           backgroundColor: NuvoGradients.redText,
         ),
       );
@@ -47,7 +48,8 @@ class _PoolInvestFormState extends State<PoolInvestForm> {
 
       if (userId == null) throw Exception("Usuario no identificado");
 
-      final success = await _api.invest(userId, amount);
+      // Use investInPool with poolId
+      final success = await _api.investInPool(userId, widget.pool.id!, amount);
 
       setState(() => _isLoading = false);
 
@@ -107,7 +109,9 @@ class _PoolInvestFormState extends State<PoolInvestForm> {
             decoration: BoxDecoration(
               color: NuvoGradients.cardBackground,
               borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: widget.pool['color'].withOpacity(0.5)),
+              border: Border.all(
+                color: NuvoGradients.purpleText.withOpacity(0.3),
+              ),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -118,7 +122,7 @@ class _PoolInvestFormState extends State<PoolInvestForm> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  widget.pool['name'],
+                  widget.pool.name,
                   style: GoogleFonts.poppins(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
@@ -127,11 +131,11 @@ class _PoolInvestFormState extends State<PoolInvestForm> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  "${widget.pool['rate']} Anual",
+                  "${widget.pool.annualRate.toStringAsFixed(1)}% Anual",
                   style: GoogleFonts.poppins(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: widget.pool['color'],
+                    color: NuvoGradients.purpleText,
                   ),
                 ),
               ],

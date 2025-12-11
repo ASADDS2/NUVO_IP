@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../services/api_service.dart';
 import '../theme/nuvo_gradients.dart';
+import '../models/investment_model.dart';
 
 class PoolDashboard extends StatefulWidget {
   final VoidCallback onWithdrawSuccess;
@@ -13,32 +15,163 @@ class PoolDashboard extends StatefulWidget {
 }
 
 class _PoolDashboardState extends State<PoolDashboard> {
-  bool _isLoading = false;
+  bool _isLoading = true;
+  bool _isWithdrawing = false;
   final ApiService _api = ApiService();
+  List<Investment> _investments = [];
+  double _totalInvested = 0.0;
+  double _totalProfit = 0.0;
 
-  // Datos simulados de la inversión activa
-  final double _invested = 5000.00;
-  final double _profit = 150.50;
+  @override
+  void initState() {
+    super.initState();
+    _loadInvestments();
+  }
+
+  void _loadInvestments() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getInt('userId');
+
+    if (userId == null) {
+      setState(() => _isLoading = false);
+      return;
+    }
+
+    try {
+      final investmentsData = await _api.getMyInvestments(userId);
+      final stats = await _api.getPoolStats(userId);
+
+      setState(() {
+        _investments = investmentsData
+            .map((data) => Investment.fromJson(data))
+            .where((inv) => inv.status == 'ACTIVE')
+            .toList();
+        _totalInvested = stats['totalInvested'] ?? 0.0;
+        _totalProfit = stats['currentProfit'] ?? 0.0;
+        _isLoading = false;
+      });
+    } catch (e) {
+      print("Error loading investments: $e");
+      setState(() => _isLoading = false);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error al cargar inversiones: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
 
   void _withdraw() async {
-    setState(() => _isLoading = true);
-    await Future.delayed(const Duration(seconds: 2));
-    // await _api.deposit(_invested + _profit); // Reembolso real
-    setState(() => _isLoading = false);
+    if (_investments.isEmpty) return;
 
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Retiro exitoso a tu cuenta"),
-          backgroundColor: NuvoGradients.greenText,
+    // Show confirmation dialog
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: NuvoGradients.cardBackground,
+        title: Text(
+          '¿Retirar inversión?',
+          style: GoogleFonts.poppins(color: Colors.white),
         ),
-      );
-      widget.onWithdrawSuccess();
+        content: Text(
+          '¿Estás seguro de que deseas retirar toda tu inversión y ganancias?',
+          style: GoogleFonts.poppins(color: Colors.grey),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: Text(
+              'CANCELAR',
+              style: GoogleFonts.poppins(color: Colors.grey),
+            ),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: Text(
+              'RETIRAR',
+              style: GoogleFonts.poppins(color: Colors.red),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm != true) return;
+
+    setState(() => _isWithdrawing = true);
+
+    try {
+      // Withdraw all active investments
+      for (final investment in _investments) {
+        if (investment.id != null) {
+          await _api.withdrawFromPool(investment.id!);
+        }
+      }
+
+      setState(() => _isWithdrawing = false);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Retiro exitoso. Fondos depositados en tu cuenta"),
+            backgroundColor: NuvoGradients.greenText,
+          ),
+        );
+        widget.onWithdrawSuccess();
+      }
+    } catch (e) {
+      setState(() => _isWithdrawing = false);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Error al retirar: $e"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.all(40),
+          child: CircularProgressIndicator(color: Colors.white),
+        ),
+      );
+    }
+
+    if (_investments.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(40),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.account_balance_wallet_outlined,
+                size: 80,
+                color: Colors.grey.shade700,
+              ),
+              const SizedBox(height: 20),
+              Text(
+                "No tienes inversiones activas",
+                style: GoogleFonts.poppins(color: Colors.grey, fontSize: 18),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    final totalValue = _totalInvested + _totalProfit;
+    final firstInvestment = _investments.first;
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -88,7 +221,7 @@ class _PoolDashboardState extends State<PoolDashboard> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  "\$ ${(_invested + _profit).toStringAsFixed(2)}",
+                  "\$ ${totalValue.toStringAsFixed(2)}",
                   style: GoogleFonts.poppins(
                     fontSize: 40,
                     fontWeight: FontWeight.bold,
@@ -109,7 +242,7 @@ class _PoolDashboardState extends State<PoolDashboard> {
                     ),
                   ),
                   child: Text(
-                    "+ \$${_profit.toStringAsFixed(2)} Ganancia",
+                    "+ \$${_totalProfit.toStringAsFixed(2)} Ganancia",
                     style: GoogleFonts.poppins(
                       color: NuvoGradients.greenText,
                       fontWeight: FontWeight.bold,
@@ -131,11 +264,21 @@ class _PoolDashboardState extends State<PoolDashboard> {
             ),
             child: Column(
               children: [
-                _DetailItem("Capital Inicial", "\$ $_invested"),
+                _DetailItem(
+                  "Capital Inicial",
+                  "\$ ${_totalInvested.toStringAsFixed(2)}",
+                ),
                 Divider(color: Colors.white.withOpacity(0.05)),
-                _DetailItem("Piscina", "Premium (15%)"),
+                _DetailItem("Piscina", firstInvestment.pool?.name ?? "N/A"),
                 Divider(color: Colors.white.withOpacity(0.05)),
-                _DetailItem("Fecha Inicio", "20 Nov 2025"),
+                _DetailItem(
+                  "Tasa de Interés",
+                  firstInvestment.pool != null
+                      ? "${firstInvestment.pool!.annualRate.toStringAsFixed(1)}% Anual"
+                      : "N/A",
+                ),
+                Divider(color: Colors.white.withOpacity(0.05)),
+                _DetailItem("Inversiones Activas", "${_investments.length}"),
               ],
             ),
           ),
@@ -157,7 +300,7 @@ class _PoolDashboardState extends State<PoolDashboard> {
               ],
             ),
             child: ElevatedButton(
-              onPressed: _isLoading ? null : _withdraw,
+              onPressed: _isWithdrawing ? null : _withdraw,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.transparent,
                 shadowColor: Colors.transparent,
@@ -165,7 +308,7 @@ class _PoolDashboardState extends State<PoolDashboard> {
                   borderRadius: BorderRadius.circular(16),
                 ),
               ),
-              child: _isLoading
+              child: _isWithdrawing
                   ? const SizedBox(
                       height: 20,
                       width: 20,

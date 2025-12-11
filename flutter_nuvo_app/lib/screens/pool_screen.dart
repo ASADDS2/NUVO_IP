@@ -5,6 +5,8 @@ import '../services/api_service.dart';
 import '../theme/nuvo_gradients.dart';
 import '../widgets/pool_invest_form.dart';
 import '../widgets/pool_dashboard.dart';
+import '../models/pool_with_stats_model.dart';
+import '../models/pool_model.dart';
 
 class PoolScreen extends StatefulWidget {
   const PoolScreen({super.key});
@@ -16,10 +18,12 @@ class PoolScreen extends StatefulWidget {
 class _PoolScreenState extends State<PoolScreen> {
   // 0: List, 1: Form, 2: Dashboard
   int _currentStep = 0;
-  Map<String, dynamic>? _selectedPool;
+  Pool? _selectedPool;
   bool _hasActiveInvestment = false;
-  List<Map<String, dynamic>> _investments = [];
+  List<PoolWithStats> _availablePools = [];
   bool _isLoading = true;
+  double _totalInvested = 0.0;
+  double _totalReturn = 0.0;
 
   @override
   void initState() {
@@ -31,76 +35,45 @@ class _PoolScreenState extends State<PoolScreen> {
     final prefs = await SharedPreferences.getInstance();
     final userId = prefs.getInt('userId');
 
-    if (userId == null) return;
+    if (userId == null) {
+      setState(() => _isLoading = false);
+      return;
+    }
 
     final api = ApiService();
     try {
+      // Fetch pools with statistics from backend
+      final poolsData = await api.getAllPoolsWithStats();
+
+      // Fetch user stats
       final stats = await api.getPoolStats(userId);
-      // Assuming stats returns a list of active investments or pool options.
-      // If backend returns just stats (total invested, return), we might need another endpoint for available pools.
-      // But for now, let's assume we keep the hardcoded pools as "Available Pools" and update "My Investments" based on stats.
-      // OR, if stats contains the list of investments, we use that.
-      // The current UI shows a list of "Available Pools" (Premium, Plus, etc.) with progress.
-      // Let's keep the hardcoded pools for display purposes as "Marketplace" and maybe update their "progress" if backend supported it.
-      // But the user wants to connect to backend.
-      // ApiService.getPoolStats returns a Map with 'totalInvested', 'totalReturn', etc.
-      // It doesn't seem to return the list of pools.
-      // So I will keep the hardcoded pools for the "List" view, but update the "Summary Cards" with real data.
+
+      // Check if user has active investments
+      final investments = await api.getMyInvestments(userId);
 
       setState(() {
-        _investments = [
-          {
-            "title": "Piscina Premium",
-            "rate": "15% Anual",
-            "returnAmount": 750.00,
-            "totalAmount": 5000.00,
-            "progress": 0.75,
-            "icon": Icons.verified_outlined,
-            "min": 1000.0,
-            "color": const Color(0xFF8B5CF6),
-            "name": "Piscina Premium",
-          },
-          {
-            "title": "Piscina Plus",
-            "rate": "12% Anual",
-            "returnAmount": 300.00,
-            "totalAmount": 2500.00,
-            "progress": 0.5,
-            "icon": Icons.trending_up,
-            "min": 500.0,
-            "color": const Color(0xFF3B82F6),
-            "name": "Piscina Plus",
-          },
-          {
-            "title": "Piscina Gold",
-            "rate": "18% Anual",
-            "returnAmount": 180.00,
-            "totalAmount": 1000.00,
-            "progress": 0.9,
-            "icon": Icons.bolt_outlined,
-            "min": 2000.0,
-            "color": const Color(0xFFF59E0B),
-            "name": "Piscina Gold",
-          },
-          {
-            "title": "Piscina Express",
-            "rate": "10% Anual",
-            "returnAmount": 50.00,
-            "totalAmount": 500.00,
-            "progress": 0.3,
-            "icon": Icons.gps_fixed,
-            "min": 100.0,
-            "color": const Color(0xFF10B981),
-            "name": "Piscina Express",
-          },
-        ];
+        _availablePools = poolsData
+            .map((poolData) => PoolWithStats.fromJson(poolData))
+            .where((poolWithStats) => poolWithStats.pool.active)
+            .toList();
+
+        _totalInvested = stats['totalInvested'] ?? 0.0;
+        _totalReturn = stats['currentProfit'] ?? 0.0;
+        _hasActiveInvestment = investments.isNotEmpty;
         _isLoading = false;
-        // Update summary cards if I had state variables for them.
-        // I need to add state variables for summary.
       });
     } catch (e) {
+      print("Error loading pool data: $e");
       setState(() => _isLoading = false);
-      // Handle error
+      // Show error message to user
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error al cargar piscinas: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 
@@ -199,7 +172,7 @@ class _PoolScreenState extends State<PoolScreen> {
                 Expanded(
                   child: _SummaryCard(
                     label: "Total Invertido",
-                    amount: "\$9,000",
+                    amount: "\$${_totalInvested.toStringAsFixed(2)}",
                     amountColor: NuvoGradients.purpleText,
                   ),
                 ),
@@ -207,7 +180,7 @@ class _PoolScreenState extends State<PoolScreen> {
                 Expanded(
                   child: _SummaryCard(
                     label: "Retorno Total",
-                    amount: "+\$1,280",
+                    amount: "+\$${_totalReturn.toStringAsFixed(2)}",
                     amountColor: NuvoGradients.greenText,
                   ),
                 ),
@@ -217,13 +190,13 @@ class _PoolScreenState extends State<PoolScreen> {
 
           const SizedBox(height: 30),
 
-          // --- 3. MIS INVERSIONES ---
+          // --- 3. PISCINAS DISPONIBLES ---
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                "Mis Inversiones",
+                "Piscinas Disponibles",
                 style: GoogleFonts.poppins(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -235,56 +208,110 @@ class _PoolScreenState extends State<PoolScreen> {
 
           const SizedBox(height: 16),
 
-          ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: _investments.length,
-            itemBuilder: (context, index) {
-              final item = _investments[index];
-              return GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _selectedPool = item;
-                    _currentStep = 1; // Go to Invest Form
-                  });
-                },
-                child: Container(
-                  margin: const EdgeInsets.only(bottom: 16),
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: NuvoGradients.cardBackground,
-                    borderRadius: BorderRadius.circular(24),
-                    border: Border.all(color: Colors.white.withOpacity(0.05)),
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF2A1B3D), // Dark Purple bg
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(
-                                color: NuvoGradients.purpleText.withOpacity(
-                                  0.3,
+          if (_isLoading)
+            const Center(
+              child: Padding(
+                padding: EdgeInsets.all(40),
+                child: CircularProgressIndicator(color: Colors.white),
+              ),
+            )
+          else if (_availablePools.isEmpty)
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(40),
+                child: Text(
+                  "No hay piscinas disponibles",
+                  style: GoogleFonts.poppins(color: Colors.grey, fontSize: 16),
+                ),
+              ),
+            )
+          else
+            ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: _availablePools.length,
+              itemBuilder: (context, index) {
+                final poolWithStats = _availablePools[index];
+                final pool = poolWithStats.pool;
+
+                // Map pool to icon based on name or use default
+                IconData poolIcon = Icons.verified_outlined;
+                if (pool.name.toLowerCase().contains('plus')) {
+                  poolIcon = Icons.trending_up;
+                } else if (pool.name.toLowerCase().contains('gold')) {
+                  poolIcon = Icons.bolt_outlined;
+                } else if (pool.name.toLowerCase().contains('express')) {
+                  poolIcon = Icons.gps_fixed;
+                }
+
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _selectedPool = pool;
+                      _currentStep = 1; // Go to Invest Form
+                    });
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.only(bottom: 16),
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: NuvoGradients.cardBackground,
+                      borderRadius: BorderRadius.circular(24),
+                      border: Border.all(color: Colors.white.withOpacity(0.05)),
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: const Color(
+                                  0xFF2A1B3D,
+                                ), // Dark Purple bg
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                  color: NuvoGradients.purpleText.withOpacity(
+                                    0.3,
+                                  ),
                                 ),
                               ),
+                              child: Icon(
+                                poolIcon,
+                                color: NuvoGradients.purpleText,
+                                size: 24,
+                              ),
                             ),
-                            child: Icon(
-                              item['icon'],
-                              color: NuvoGradients.purpleText,
-                              size: 24,
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    pool.name,
+                                    style: GoogleFonts.poppins(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  Text(
+                                    "${pool.annualRate.toStringAsFixed(1)}% Anual",
+                                    style: GoogleFonts.poppins(
+                                      color: const Color(0xFF6366F1),
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Text(
-                                  item['title'],
+                                  "${poolWithStats.currentInvestors}/${pool.maxParticipants}",
                                   style: GoogleFonts.poppins(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
@@ -292,64 +319,42 @@ class _PoolScreenState extends State<PoolScreen> {
                                   ),
                                 ),
                                 Text(
-                                  item['rate'],
+                                  "Inversores",
                                   style: GoogleFonts.poppins(
-                                    color: const Color(0xFF6366F1),
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 13,
+                                    color: Colors.grey,
+                                    fontSize: 12,
                                   ),
                                 ),
                               ],
                             ),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(
-                                "+\$${item['returnAmount'].toStringAsFixed(2)}",
-                                style: GoogleFonts.poppins(
-                                  color: NuvoGradients.greenText,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              Text(
-                                "\$${item['totalAmount'].toStringAsFixed(2)}",
-                                style: GoogleFonts.poppins(
-                                  color: Colors.grey,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      // Progress Bar
-                      Container(
-                        height: 8,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: Colors.grey.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(4),
+                          ],
                         ),
-                        child: FractionallySizedBox(
-                          alignment: Alignment.centerLeft,
-                          widthFactor: item['progress'],
-                          child: Container(
-                            decoration: BoxDecoration(
-                              gradient: NuvoGradients.poolProgressBar,
-                              borderRadius: BorderRadius.circular(4),
+                        const SizedBox(height: 16),
+                        // Progress Bar
+                        Container(
+                          height: 8,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.grey.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: FractionallySizedBox(
+                            alignment: Alignment.centerLeft,
+                            widthFactor: poolWithStats.progress,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                gradient: NuvoGradients.poolProgressBar,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              );
-            },
-          ),
+                );
+              },
+            ),
           const SizedBox(height: 30),
         ],
       ),

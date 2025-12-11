@@ -178,6 +178,83 @@ class ApiService {
   }
 
   // --- POOL ---
+  final String _poolsUrl = 'http://localhost:8085/api/v1/pools';
+
+  // Get all active pools
+  Future<List<dynamic>> getActivePools() async {
+    try {
+      final response = await http.get(Uri.parse('$_poolsUrl/active'));
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      }
+    } catch (e) {
+      print("Error fetching active pools: $e");
+    }
+    return [];
+  }
+
+  // Get all pools with statistics
+  Future<List<dynamic>> getAllPoolsWithStats() async {
+    try {
+      final response = await http.get(Uri.parse(_poolsUrl));
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      }
+    } catch (e) {
+      print("Error fetching pools with stats: $e");
+    }
+    return [];
+  }
+
+  // Invest in a specific pool
+  Future<bool> investInPool(int userId, int poolId, double amount) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$_poolUrl/invest'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'userId': userId,
+          'poolId': poolId,
+          'amount': amount,
+        }),
+      );
+      return response.statusCode == 200;
+    } catch (e) {
+      print("Error investing in pool: $e");
+      return false;
+    }
+  }
+
+  // Get user's investments
+  Future<List<dynamic>> getMyInvestments(int userId) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$_poolUrl/my-investments/$userId'),
+      );
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      }
+    } catch (e) {
+      print("Error fetching my investments: $e");
+    }
+    return [];
+  }
+
+  // Withdraw from pool
+  Future<bool> withdrawFromPool(int investmentId) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$_poolUrl/withdraw/$investmentId'),
+        headers: {'Content-Type': 'application/json'},
+      );
+      return response.statusCode == 200;
+    } catch (e) {
+      print("Error withdrawing from pool: $e");
+      return false;
+    }
+  }
+
+  // Legacy invest method - kept for backward compatibility
   Future<bool> invest(int userId, double amount) async {
     try {
       final response = await http.post(
@@ -196,11 +273,22 @@ class ApiService {
     try {
       final response = await http.get(Uri.parse('$_poolUrl/stats/$userId'));
       if (response.statusCode == 200) {
-        return jsonDecode(response.body);
+        final data = jsonDecode(response.body);
+        return {
+          'totalInvested': (data['totalInvested'] is num)
+              ? (data['totalInvested'] as num).toDouble()
+              : 0.0,
+          'currentProfit': (data['currentProfit'] is num)
+              ? (data['currentProfit'] as num).toDouble()
+              : 0.0,
+          'totalProjected': (data['totalProjected'] is num)
+              ? (data['totalProjected'] as num).toDouble()
+              : 0.0,
+        };
       }
     } catch (e) {
       print("Error fetching pool stats: $e");
     }
-    return {'totalInvested': 0.0, 'currentProfit': 0.0};
+    return {'totalInvested': 0.0, 'currentProfit': 0.0, 'totalProjected': 0.0};
   }
 }
