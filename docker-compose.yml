@@ -1,4 +1,7 @@
+version: '3.8'
+
 services:
+  # Database
   postgres:
     image: postgres:16-alpine
     container_name: nuvo_postgres
@@ -11,6 +14,122 @@ services:
     volumes:
       - ./docker/init-scripts:/docker-entrypoint-initdb.d
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -p 5444" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - nuvo-network
+
+  # Auth Service
+  nuvo-auth-service:
+    build:
+      context: ./nuvo-auth-service
+      dockerfile: Dockerfile
+    container_name: nuvo_auth_service
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5444/nuvo_auth_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 1234
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SERVER_PORT: 8081
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - nuvo-network
+    restart: unless-stopped
+
+  # Account Service
+  nuvo-account-service:
+    build:
+      context: ./nuvo-account-service
+      dockerfile: Dockerfile
+    container_name: nuvo_account_service
+    ports:
+      - "8082:8082"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5444/nuvo_account_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 1234
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SERVER_PORT: 8082
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - nuvo-network
+    restart: unless-stopped
+
+  # Transaction Service
+  nuvo-transaction-service:
+    build:
+      context: ./nuvo-transaction-service
+      dockerfile: Dockerfile
+    container_name: nuvo_transaction_service
+    ports:
+      - "8083:8083"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5444/nuvo_transaction_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 1234
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SERVER_PORT: 8083
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - nuvo-network
+    restart: unless-stopped
+
+  # Loan Service
+  nuvo-loan-service:
+    build:
+      context: ./nuvo-loan-service
+      dockerfile: Dockerfile
+    container_name: nuvo_loan_service
+    ports:
+      - "8084:8084"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5444/nuvo_loan_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 1234
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SERVER_PORT: 8084
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - nuvo-network
+    restart: unless-stopped
+
+  # Pool Service
+  nuvo-pool-service:
+    build:
+      context: ./nuvo-pool-service
+      dockerfile: Dockerfile
+    container_name: nuvo_pool_service
+    ports:
+      - "8085:8085"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5444/nuvo_pool_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 1234
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SERVER_PORT: 8085
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - nuvo-network
+    restart: unless-stopped
+
+networks:
+  nuvo-network:
+    driver: bridge
 
 volumes:
   postgres_data:
