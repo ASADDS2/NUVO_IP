@@ -15,9 +15,13 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.nuvo.transaction.domain.ports.in.CreateTransactionUseCase;
+
 @Service
 @RequiredArgsConstructor
-public class TransactionService implements GetHistoryUseCase, DepositUseCase, TransferUseCase, DeleteTransactionUseCase {
+public class TransactionService
+        implements GetHistoryUseCase, DepositUseCase, TransferUseCase, DeleteTransactionUseCase,
+        CreateTransactionUseCase {
 
     private final TransactionRepositoryPort transactionRepository;
     private final AccountPort accountPort;
@@ -65,5 +69,19 @@ public class TransactionService implements GetHistoryUseCase, DepositUseCase, Tr
     @Override
     public void deleteById(Long id) {
         transactionRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void createTransaction(CreateTransactionRequest request) {
+        Transaction transaction = Transaction.builder()
+                .sourceUserId(request.getUserId())
+                .targetUserId(request.getUserId())
+                .amount(request.getAmount())
+                .type(request.getType())
+                .description(request.getDescription())
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        transactionRepository.save(transaction);
     }
 }

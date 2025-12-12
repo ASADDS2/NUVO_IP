@@ -9,4 +9,8 @@ public interface PoolPersistenceMapper {
     PoolEntity toEntity(Pool domain);
 
     Pool toDomain(PoolEntity entity);
+
+    @org.mapstruct.Mapping(target = "pool", ignore = true)
+    com.nuvo.pool.domain.model.Investment investmentEntityToInvestment(
+            com.nuvo.pool.infrastructure.entities.InvestmentEntity entity);
 }

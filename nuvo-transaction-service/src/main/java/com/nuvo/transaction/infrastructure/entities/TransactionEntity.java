@@ -24,6 +24,8 @@ public class TransactionEntity {
 
     private String type;
 
+    private String description;
+
     private LocalDateTime timestamp;
 
     @PrePersist

@@ -177,6 +177,31 @@ class ApiService {
     }
   }
 
+  Future<List<dynamic>> getMyLoans(int userId) async {
+    try {
+      final response = await http.get(Uri.parse('$_loanUrl/my-loans/$userId'));
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      }
+    } catch (e) {
+      print("Error fetching my loans: $e");
+    }
+    return [];
+  }
+
+  Future<bool> payLoan(int loanId, double amount) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$_loanUrl/$loanId/pay?amount=$amount'),
+        headers: {'Content-Type': 'application/json'},
+      );
+      return response.statusCode == 200;
+    } catch (e) {
+      print("Error paying loan: $e");
+      return false;
+    }
+  }
+
   // --- POOL ---
   final String _poolsUrl = 'http://localhost:8085/api/v1/pools';
 

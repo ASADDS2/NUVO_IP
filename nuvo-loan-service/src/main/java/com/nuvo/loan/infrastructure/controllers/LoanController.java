@@ -25,6 +25,8 @@ public class LoanController {
     private final GetLoansUseCase getLoansUseCase;
     private final LoanWebMapper loanMapper;
 
+    private final com.nuvo.loan.domain.ports.in.PayLoanUseCase payLoanUseCase;
+
     @PostMapping
     public ResponseEntity<LoanResponse> createLoan(@RequestBody LoanRequest request) {
         Loan loan = loanMapper.toDomain(request);
@@ -36,6 +38,12 @@ public class LoanController {
     public ResponseEntity<LoanResponse> approveLoan(@PathVariable Long loanId) {
         Loan approvedLoan = approveLoanUseCase.approveLoan(loanId);
         return ResponseEntity.ok(loanMapper.toResponse(approvedLoan));
+    }
+
+    @PostMapping("/{loanId}/pay")
+    public ResponseEntity<LoanResponse> payLoan(@PathVariable Long loanId, @RequestParam java.math.BigDecimal amount) {
+        Loan paidLoan = payLoanUseCase.payLoan(loanId, amount);
+        return ResponseEntity.ok(loanMapper.toResponse(paidLoan));
     }
 
     @GetMapping

@@ -9,4 +9,7 @@ public interface InvestmentPersistenceMapper {
     InvestmentEntity toEntity(Investment domain);
 
     Investment toDomain(InvestmentEntity entity);
+
+    @org.mapstruct.Mapping(target = "investments", ignore = true)
+    com.nuvo.pool.domain.model.Pool poolEntityToPool(com.nuvo.pool.infrastructure.entities.PoolEntity entity);
 }

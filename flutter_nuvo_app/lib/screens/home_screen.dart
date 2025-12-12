@@ -20,7 +20,7 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   // --- DATOS MOCK ---
   double _balance = 0.00;
   String _userName = "Cargando...";
@@ -30,7 +30,22 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _loadUserData();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // Refresh data when the app comes back to foreground
+      _loadUserData();
+    }
   }
 
   void _loadUserData() async {
@@ -76,8 +91,30 @@ class _HomeScreenState extends State<HomeScreen> {
             // If I am target, it's positive.
 
             double amount = (t['amount'] as num).toDouble();
-            if (isSource) {
-              amount = -amount;
+            String type = t['type'] ?? "UNKNOWN";
+
+            // Determine sign based on type and role
+            if (type == 'DEPOSIT' ||
+                type == 'POOL_WITHDRAWAL' ||
+                type == 'LOAN_DISBURSEMENT') {
+              amount = amount.abs(); // Always positive (Income)
+            } else if (type == 'INVESTMENT' ||
+                type == 'WITHDRAWAL' ||
+                type == 'LOAN_PAYMENT') {
+              amount = -amount.abs(); // Always negative (Expense)
+            } else if (type == 'TRANSFER') {
+              if (isSource) {
+                amount = -amount.abs();
+              } else {
+                amount = amount.abs();
+              }
+            } else {
+              // Fallback for unknown types
+              if (isSource) {
+                amount = -amount.abs();
+              } else {
+                amount = amount.abs();
+              }
             }
 
             return {
@@ -91,7 +128,8 @@ class _HomeScreenState extends State<HomeScreen> {
             };
           })
           .toList()
-          .cast<Map<String, dynamic>>();
+          .map((item) => Map<String, dynamic>.from(item))
+          .toList();
     });
   }
 
@@ -305,10 +343,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     icon: Icons.account_balance_wallet_outlined,
                     label: "Préstamos",
                     gradient: NuvoGradients.actionLoans,
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const LoanScreen()),
-                    ),
+                    onTap: () =>
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const LoanScreen()),
+                        ).then((res) {
+                          if (res == true) _refreshData();
+                        }),
                   ),
                   _ActionButton(
                     icon: Icons.trending_up,

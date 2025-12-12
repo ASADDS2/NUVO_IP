@@ -98,6 +98,9 @@ El sistema está compuesto por 5 microservicios independientes y un frontend Ang
 - **Spring Security** - Seguridad y autenticación
 - **Spring Data JPA** - Persistencia
 - **Hibernate** - ORM
+- **SpringDoc OpenAPI 2.3.0** - Documentación API (Swagger)
+- **JUnit 5 + Mockito** - Testing unitario
+- **Bean Validation** - Validación de datos
 - **JWT** - JSON Web Tokens
 - **OpenFeign** - Cliente HTTP declarativo
 - **Lombok** - Reducción de código boilerplate

@@ -1,6 +1,6 @@
 package com.nuvo.pool.application.usecases;
 
-import com.nuvo.pool.infrastructure.dto.InvestRequest; 
+import com.nuvo.pool.infrastructure.dto.InvestRequest;
 import com.nuvo.pool.domain.model.Investment;
 import com.nuvo.pool.domain.model.InvestmentStatus;
 import com.nuvo.pool.domain.model.Pool;
@@ -22,6 +22,7 @@ public class InvestUseCaseImpl implements InvestUseCase {
     private final InvestmentRepositoryPort investmentRepository;
     private final PoolRepositoryPort poolRepository;
     private final AccountPort accountPort;
+    private final com.nuvo.pool.infrastructure.client.TransactionClient transactionClient;
 
     @Transactional
     @Override
@@ -54,6 +55,22 @@ public class InvestUseCaseImpl implements InvestUseCase {
         }
 
         accountPort.updateBalance(request.getUserId(), request.getAmount().negate());
+
+        // Record transaction
+        try {
+            transactionClient.createTransaction(
+                    com.nuvo.pool.infrastructure.client.TransactionClient.CreateTransactionRequest.builder()
+                            .userId(request.getUserId())
+                            .amount(request.getAmount()) // Send positive amount, let viewer determine sign based on
+                                                         // type/source
+                            .type("INVESTMENT")
+                            .description("Inversión en Piscina " + (pool != null ? pool.getName() : "General"))
+                            .build());
+        } catch (Exception e) {
+            // Log error but don't fail investment? Or fail?
+            // Ideally distributed transaction, but for now log.
+            System.err.println("Error recording transaction: " + e.getMessage());
+        }
 
         Investment investment = new Investment();
         investment.setUserId(request.getUserId());

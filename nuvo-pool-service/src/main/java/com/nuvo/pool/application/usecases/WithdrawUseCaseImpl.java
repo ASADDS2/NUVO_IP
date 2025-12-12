@@ -19,6 +19,7 @@ public class WithdrawUseCaseImpl implements WithdrawUseCase {
 
     private final InvestmentRepositoryPort investmentRepository;
     private final AccountPort accountPort;
+    private final com.nuvo.pool.infrastructure.client.TransactionClient transactionClient;
 
     private static final double DEFAULT_INTEREST_RATE_PER_DAY = 0.01;
 
@@ -37,6 +38,20 @@ public class WithdrawUseCaseImpl implements WithdrawUseCase {
         BigDecimal currentVal = calculateCurrentValue(investment);
 
         accountPort.updateBalance(investment.getUserId(), currentVal);
+
+        // Record transaction
+        try {
+            transactionClient.createTransaction(
+                    com.nuvo.pool.infrastructure.client.TransactionClient.CreateTransactionRequest.builder()
+                            .userId(investment.getUserId())
+                            .amount(currentVal)
+                            .type("POOL_WITHDRAWAL")
+                            .description("Retiro de Piscina "
+                                    + (investment.getPool() != null ? investment.getPool().getName() : ""))
+                            .build());
+        } catch (Exception e) {
+            System.err.println("Error recording transaction: " + e.getMessage());
+        }
 
         investment.setStatus(InvestmentStatus.WITHDRAWN);
         investmentRepository.save(investment);

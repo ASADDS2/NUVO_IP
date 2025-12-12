@@ -24,6 +24,7 @@ public class TransactionRepositoryAdapter implements TransactionRepositoryPort {
                 .targetUserId(transaction.getTargetUserId())
                 .amount(transaction.getAmount())
                 .type(transaction.getType())
+                .description(transaction.getDescription())
                 .timestamp(transaction.getTimestamp())
                 .build();
 
@@ -59,6 +60,7 @@ public class TransactionRepositoryAdapter implements TransactionRepositoryPort {
                 .targetUserId(entity.getTargetUserId())
                 .amount(entity.getAmount())
                 .type(entity.getType())
+                .description(entity.getDescription())
                 .timestamp(entity.getTimestamp())
                 .build();
     }

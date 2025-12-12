@@ -23,6 +23,7 @@ public class TransactionController {
     private final DepositUseCase depositUseCase;
     private final TransferUseCase transferUseCase;
     private final DeleteTransactionUseCase deleteTransactionUseCase;
+    private final com.nuvo.transaction.domain.ports.in.CreateTransactionUseCase createTransactionUseCase;
 
     @GetMapping("/history/{userId}")
     public ResponseEntity<List<Transaction>> getHistory(@PathVariable Integer userId) {
@@ -50,5 +51,12 @@ public class TransactionController {
     public ResponseEntity<Void> deleteTransaction(@PathVariable Long id) {
         deleteTransactionUseCase.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<Void> createTransaction(
+            @RequestBody com.nuvo.transaction.application.services.CreateTransactionRequest request) {
+        createTransactionUseCase.createTransaction(request);
+        return ResponseEntity.ok().build();
     }
 }

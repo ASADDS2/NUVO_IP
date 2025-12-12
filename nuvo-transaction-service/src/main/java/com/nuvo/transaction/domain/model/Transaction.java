@@ -17,5 +17,6 @@ public class Transaction {
     private Integer targetUserId;
     private BigDecimal amount;
     private String type;
+    private String description;
     private LocalDateTime timestamp;
 }

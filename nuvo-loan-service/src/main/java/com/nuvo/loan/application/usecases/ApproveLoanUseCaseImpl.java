@@ -17,6 +17,7 @@ public class ApproveLoanUseCaseImpl implements ApproveLoanUseCase {
 
     private final LoanRepositoryPort loanRepositoryPort;
     private final AccountPort accountPort;
+    private final com.nuvo.loan.infrastructure.client.TransactionClient transactionClient;
 
     @Override
     @Transactional
@@ -33,6 +34,19 @@ public class ApproveLoanUseCaseImpl implements ApproveLoanUseCase {
 
         // Deposit money to user account
         accountPort.deposit(loan.getUserId(), loan.getAmount());
+
+        // Record transaction
+        try {
+            transactionClient.createTransaction(
+                    com.nuvo.loan.infrastructure.client.TransactionClient.CreateTransactionRequest.builder()
+                            .userId(loan.getUserId())
+                            .amount(loan.getAmount())
+                            .type("LOAN_DISBURSEMENT")
+                            .description("Desembolso de Préstamo #" + loan.getId())
+                            .build());
+        } catch (Exception e) {
+            System.err.println("Error recording transaction: " + e.getMessage());
+        }
 
         return loanRepositoryPort.save(loan);
     }

@@ -79,83 +79,110 @@ class _PoolScreenState extends State<PoolScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Auto-navigate to dashboard if active investment exists and we are at root
-    if (_hasActiveInvestment && _currentStep == 0) _currentStep = 2;
-
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      appBar: AppBar(
-        title: Text(
-          "Inversiones",
-          style: GoogleFonts.poppins(
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
+    return DefaultTabController(
+      length: 2,
+      initialIndex: _hasActiveInvestment ? 0 : 1,
+      child: Scaffold(
         backgroundColor: Colors.transparent,
-        iconTheme: const IconThemeData(color: Colors.white),
-        elevation: 0,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: NuvoGradients.headerGradient,
+        appBar: AppBar(
+          title: Text(
+            "Inversiones",
+            style: GoogleFonts.poppins(
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
           ),
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            setState(() {
-              if (_currentStep == 1) {
-                _currentStep = 0;
-              } else if (_currentStep == 2) {
-                _currentStep = 0;
-              } else {
-                Navigator.pop(context);
-              }
-            });
-          },
-        ),
-      ),
-      body: Container(
-        height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFF2A1B3D), // Purple dark top
-              Color(0xFF0F1512), // Dark Greenish/Black bottom
+          backgroundColor: Colors.transparent,
+          iconTheme: const IconThemeData(color: Colors.white),
+          elevation: 0,
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+              gradient: NuvoGradients.headerGradient,
+            ),
+          ),
+          bottom: TabBar(
+            indicatorColor: const Color(0xFF6366F1),
+            labelColor: Colors.white,
+            unselectedLabelColor: Colors.grey,
+            labelStyle: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+            tabs: const [
+              Tab(text: "Mis Inversiones"),
+              Tab(text: "Piscinas"),
             ],
           ),
         ),
-        child: _buildBody(),
+        body: Container(
+          height: double.infinity,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color(0xFF2A1B3D), // Purple dark top
+                Color(0xFF0F1512), // Dark Greenish/Black bottom
+              ],
+            ),
+          ),
+          child: _currentStep == 1 && _selectedPool != null
+              ? PoolInvestForm(
+                  pool: _selectedPool!,
+                  onBack: () => setState(() => _currentStep = 0),
+                  onInvestSuccess: () {
+                    setState(() {
+                      _hasActiveInvestment = true;
+                      _currentStep = 0;
+                      _loadPoolData(); // Reload data
+                    });
+                    // Switch to "Mis Inversiones" tab?
+                    // DefaultTabController state is not easily accessible here without a key or controller.
+                    // For now, reloading data and setting _hasActiveInvestment might be enough if we rebuild.
+                    // But we are inside TabBarView... wait.
+                    // If I show PoolInvestForm covering everything, it's fine.
+                    // But better to have it inside the "Piscinas" tab or as a separate route.
+                    // Given the current structure, I'll keep it simple:
+                    // If investing, show form. If not, show Tabs.
+                  },
+                )
+              : TabBarView(
+                  children: [_buildMyInvestmentsTab(), _buildPoolsTab()],
+                ),
+        ),
       ),
     );
   }
 
-  Widget _buildBody() {
-    if (_currentStep == 1 && _selectedPool != null) {
-      return PoolInvestForm(
-        pool: _selectedPool!,
-        onBack: () => setState(() => _currentStep = 0),
-        onInvestSuccess: () {
-          setState(() {
-            _hasActiveInvestment = true;
-            _currentStep = 2;
-          });
-        },
+  Widget _buildMyInvestmentsTab() {
+    if (!_hasActiveInvestment) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.savings_outlined,
+              size: 64,
+              color: Colors.grey.withOpacity(0.5),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              "No tienes inversiones activas",
+              style: GoogleFonts.poppins(color: Colors.grey, fontSize: 16),
+            ),
+          ],
+        ),
       );
-    } else if (_currentStep == 2) {
-      return PoolDashboard(
-        onWithdrawSuccess: () {
-          setState(() {
-            _hasActiveInvestment = false;
-            _currentStep = 0;
-          });
-        },
-      );
-    } else {
-      return _buildPoolList();
     }
+    return PoolDashboard(
+      onWithdrawSuccess: () {
+        setState(() {
+          _hasActiveInvestment = false;
+          _loadPoolData();
+        });
+      },
+    );
+  }
+
+  Widget _buildPoolsTab() {
+    return _buildPoolList();
   }
 
   Widget _buildPoolList() {
