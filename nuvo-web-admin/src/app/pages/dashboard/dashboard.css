@@ -1,0 +1,88 @@
+/* Dashboard Styles - Diseño según referencia */
+
+/* Cards de Estadísticas con Gradientes */
+.stat-card-green-dark {
+    background: linear-gradient(135deg, #0f4d3c 0%, #0a3a2e 100%);
+    border: 1px solid rgba(0, 230, 118, 0.25);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 230, 118, 0.08);
+}
+
+.stat-card-green-dark:hover {
+    border-color: rgba(0, 230, 118, 0.4);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 230, 118, 0.15);
+}
+
+.stat-card-green-light {
+    background: linear-gradient(135deg, #1a6b55 0%, #0f4d3c 100%);
+    border: 1px solid rgba(0, 230, 118, 0.25);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 230, 118, 0.08);
+}
+
+.stat-card-green-light:hover {
+    border-color: rgba(0, 230, 118, 0.4);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 230, 118, 0.15);
+}
+
+.stat-card-brown {
+    background: linear-gradient(135deg, #5a4030 0%, #3f2a1a 100%);
+    border: 1px solid rgba(251, 146, 60, 0.25);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(251, 146, 60, 0.08);
+}
+
+.stat-card-brown:hover {
+    border-color: rgba(251, 146, 60, 0.4);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(251, 146, 60, 0.15);
+}
+
+.stat-card-blue {
+    background: linear-gradient(135deg, #1e4a6f 0%, #0f3a57 100%);
+    border: 1px solid rgba(59, 130, 246, 0.25);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.08);
+}
+
+.stat-card-blue:hover {
+    border-color: rgba(59, 130, 246, 0.4);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(59, 130, 246, 0.15);
+}
+
+/* Animaciones */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* Staggered animation for cards */
+.grid>div:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.grid>div:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.grid>div:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.grid>div:nth-child(4) {
+    animation-delay: 0.4s;
+}

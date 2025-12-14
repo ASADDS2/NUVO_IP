@@ -1,8 +1,7 @@
 package com.nuvo.auth.domain.ports.in;
 
-import com.nuvo.auth.application.services.AuthenticationRequest;
-import com.nuvo.auth.application.services.AuthenticationResponse;
+import com.nuvo.auth.domain.model.User;
 
 public interface LoginUseCase {
-    AuthenticationResponse authenticate(AuthenticationRequest request);
+    User authenticate(String email, String password);
 }
