@@ -1,191 +1,154 @@
-# 🏦 NUVO - Sistema Bancario de Microservicios
+# 🏦 NUVO - Microservices Banking System
 
 [![Java](https://img.shields.io/badge/Java-17-orange.svg)](https://www.oracle.com/java/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.3-green.svg)](https://spring.io/projects/spring-boot)
 [![Angular](https://img.shields.io/badge/Angular-20.3.6-red.svg)](https://angular.io/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-Sistema bancario moderno construido con arquitectura de microservicios, diseñado para proporcionar servicios financieros completos incluyendo gestión de cuentas, transacciones, préstamos e inversiones.
+A modern banking system built with microservices architecture, designed to provide complete financial services including account management, transactions, loans, and investments.
 
-## 📋 Tabla de Contenidos
+## 📋 Table of Contents
 
-- [Características](#-características)
-- [Arquitectura](#-arquitectura)
-- [Tecnologías](#-tecnologías)
-- [Requisitos Previos](#-requisitos-previos)
-- [Instalación](#-instalación)
-- [Configuración](#-configuración)
-- [Uso](#-uso)
+- [Features](#-features)
+- [Architecture](#-architecture)
+- [Technologies](#-technologies)
+- [Prerequisites](#-prerequisites)
+- [Installation](#-installation)
+- [Configuration](#-configuration)
+- [Usage](#-usage)
 - [API Endpoints](#-api-endpoints)
-- [Base de Datos](#-base-de-datos)
-- [Contribuir](#-contribuir)
-- [Licencia](#-licencia)
+- [Database](#-database)
+- [Contributing](#-contributing)
+- [License](#-license)
 
-## ✨ Características
+## ✨ Features
 
-### 🔐 Autenticación y Seguridad
-- Autenticación basada en JWT
-- Roles de usuario (ADMIN, USER)
-- Seguridad end-to-end con Spring Security
+### 🔐 Authentication & Security
+- JWT-based authentication
+- User roles (ADMIN, USER)
+- End-to-end security with Spring Security
 
-### 💰 Gestión de Cuentas
-- Creación y administración de cuentas bancarias
-- Consulta de saldos en tiempo real
-- Historia de movimientos
+### 💰 Account Management
+- Creation and administration of bank accounts
+- Real-time balance inquiry
+- Transaction history
 
-### 💸 Transacciones
-- Transferencias entre usuarios
-- Depósitos
-- Historial completo de transacciones
-- Validaciones de saldo
+### 💸 Transactions
+- Transfers between users
+- Deposits
+- Complete transaction history
+- Balance validations
 
-### 🏦 Préstamos
-- Solicitud de préstamos
-- Aprobación/rechazo de préstamos
-- Seguimiento de pagos
-- Cálculo automático de intereses
-- Estados: PENDING, APPROVED, REJECTED, PAID
+### 🏦 Loans
+- Loan applications
+- Loan approval/rejection
+- Payment tracking
+- Automatic interest calculation
+- Statuses: PENDING, APPROVED, REJECTED, PAID
 
-### 📈 Pool de Inversiones
-- Sistema de inversiones con rentabilidad
-- Interés compuesto calculado por minuto
-- Retiro de inversiones con ganancias
-- Seguimiento de inversiones activas
+### 📈 Investment Pool
+- Investment system with profitability
+- Compound interest calculated per minute
+- Withdrawal of investments with earnings
+- Tracking of active investments
 
-## 🏗️ Arquitectura
+## 🏗️ Architecture
 
-El sistema está compuesto por 5 microservicios independientes y un frontend Angular:
+The system is composed of 5 independent microservices and an Angular frontend:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                     Frontend Angular                         │
-│                   (Puerto 4200)                              │
+│                     Angular Frontend                         │
+│                   (Port 4200)                                │
 └────────────┬────────────────────────────────────────────────┘
              │
              ├──────────────────────────────────────┐
              │                                      │
    ┌─────────▼──────────┐              ┌──────────▼─────────┐
    │  Auth Service      │              │  Account Service   │
-   │   (Puerto 8081)    │              │   (Puerto 8082)    │
+   │   (Port 8091)      │              │   (Port 8082)      │
    └─────────┬──────────┘              └──────────┬─────────┘
              │                                    │
    ┌─────────▼──────────┐              ┌─────────▼──────────┐
    │Transaction Service │              │   Loan Service     │
-   │   (Puerto 8083)    │              │   (Puerto 8084)    │
+   │   (Port 8086)      │              │   (Port 8084)      │
    └────────────────────┘              └────────────────────┘
                          ┌──────────────────┐
                          │  Pool Service    │
-                         │  (Puerto 8085)   │
+                         │  (Port 8085)     │
                          └──────────────────┘
 ```
 
-### Microservicios
+### Microservices
 
-| Servicio | Puerto | Base de Datos | Descripción |
-|----------|--------|---------------|-------------|
-| **auth-service** | 8081 | nuvo_auth_db | Autenticación y gestión de usuarios |
-| **account-service** | 8082 | nuvo_account_db | Gestión de cuentas bancarias |
-| **transaction-service** | 8083 | nuvo_transaction_db | Procesamiento de transacciones |
-| **loan-service** | 8084 | nuvo_loan_db | Gestión de préstamos |
-| **pool-service** | 8085 | nuvo_pool_db | Sistema de inversiones |
-| **nuvo-web-admin** | 4200 | - | Interfaz de usuario Angular |
+| Service | Port | Database | Description |
+|---------|------|----------|-------------|
+| **auth-service** | 8091 | nuvo_auth_db | Authentication and user management |
+| **account-service** | 8082 | nuvo_account_db | Bank account management |
+| **transaction-service** | 8086 | nuvo_transaction_db | Transaction processing |
+| **loan-service** | 8084 | nuvo_loan_db | Loan management |
+| **pool-service** | 8085 | nuvo_pool_db | Investment system |
+| **nuvo-web-admin** | 4200 | - | Angular User Interface |
 
-## 🛠️ Tecnologías
+## 🛠️ Technologies
 
 ### Backend
 - **Java 17**
 - **Spring Boot 3.2.3**
-- **Spring Security** - Seguridad y autenticación
-- **Spring Data JPA** - Persistencia
+- **Spring Security** - Security and authentication
+- **Spring Data JPA** - Persistence
 - **Hibernate** - ORM
-- **SpringDoc OpenAPI 2.3.0** - Documentación API (Swagger)
-- **JUnit 5 + Mockito** - Testing unitario
-- **Bean Validation** - Validación de datos
+- **SpringDoc OpenAPI 2.3.0** - API Documentation (Swagger)
+- **JUnit 5 + Mockito** - Unit testing
+- **Bean Validation** - Data validation
 - **JWT** - JSON Web Tokens
-- **OpenFeign** - Cliente HTTP declarativo
-- **Lombok** - Reducción de código boilerplate
-- **Maven** - Gestión de dependencias
+- **OpenFeign** - Declarative HTTP client
+- **Lombok** - Boilerplate code reduction
+- **Maven** - Dependency management
 
 ### Frontend
 - **Angular 20.3.6**
 - **TypeScript**
 - **RxJS**
-- **Angular Material** (opcional)
+- **Angular Material** (optional)
 
-### Base de Datos
-- **MySQL/MariaDB 10.6+**
-- Arquitectura multi-database (una base de datos por microservicio)
+### Database
+- **MySQL/MariaDB 10.6+** or **PostgreSQL**
+- Multi-database architecture (one database per microservice)
 
-## 📦 Requisitos Previos
+## 📦 Prerequisites
 
-Antes de comenzar, asegúrate de tener instalado:
+Before starting, ensure you have installed:
 
-- ☕ **Java JDK 17** o superior
+- ☕ **Java JDK 17** or higher
 - 📦 **Maven 3.6+**
-- 🗄️ **MySQL/MariaDB 10.6+**
-- 🟢 **Node.js 18+** y **npm**
+- 🗄️ **PostgreSQL** (via Docker recommended)
+- 🟢 **Node.js 18+** and **npm**
 - 📱 **Angular CLI** (`npm install -g @angular/cli`)
+- 🐳 **Docker**
 
-## 🚀 Instalación
+## 🚀 Installation
 
-### 1. Clonar el Repositorio
-
-```bash
-git clone https://github.com/ASADDS2/NUVO.git
-cd NUVO
-```
-
-### 2. Configurar la Base de Datos
-
-#### Opción A: Ejecutar Script SQL
+### 1. Clone the Repository
 
 ```bash
-# Iniciar sesión en MySQL/MariaDB
-mysql -u root -p
-
-# Dentro de MySQL, ejecutar:
-source docs/insert_data.sql
+git clone https://github.com/ASADDS2/NUVO_IP.git
+cd NUVO_IP
 ```
 
-#### Opción B: Crear Bases de Datos Manualmente
+### 2. Configure the Database
 
-```sql
-CREATE DATABASE nuvo_auth_db;
-CREATE DATABASE nuvo_account_db;
-CREATE DATABASE nuvo_transaction_db;
-CREATE DATABASE nuvo_loan_db;
-CREATE DATABASE nuvo_pool_db;
-
-GRANT ALL PRIVILEGES ON nuvo_auth_db.* TO 'root'@'localhost';
-GRANT ALL PRIVILEGES ON nuvo_account_db.* TO 'root'@'localhost';
-GRANT ALL PRIVILEGES ON nuvo_transaction_db.* TO 'root'@'localhost';
-GRANT ALL PRIVILEGES ON nuvo_loan_db.* TO 'root'@'localhost';
-GRANT ALL PRIVILEGES ON nuvo_pool_db.* TO 'root'@'localhost';
-FLUSH PRIVILEGES;
-```
-
-### 3. Configurar Credenciales de Base de Datos
-
-Actualiza los archivos `application.yml` en cada microservicio con tus credenciales:
-
-```yaml
-spring:
-  datasource:
-    username: root
-    password: TU_CONTRASEÑA
-```
-
-**Archivos a actualizar:**
-- `nuvo-auth-service/src/main/resources/application.yml`
-- `nuvo-account-service/src/main/resources/application.yml`
-- `nuvo-transaction-service/src/main/resources/application.yml`
-- `nuvo-loan-service/src/main/resources/application.yml`
-- `nuvo-pool-service/src/main/resources/application.yml`
-
-### 4. Compilar los Microservicios
+The project uses Docker for the database.
 
 ```bash
-# Compilar todos los microservicios
+# Start PostgreSQL container
+docker run -d --name nuvo_postgres -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=1234 -v postgres_data:/var/lib/postgresql/data -p 5444:5432 postgres:16-alpine
+```
+
+### 3. Build the Microservices
+
+```bash
+# Build all microservices
 cd nuvo-auth-service && ./mvnw clean install -DskipTests && cd ..
 cd nuvo-account-service && ./mvnw clean install -DskipTests && cd ..
 cd nuvo-transaction-service && ./mvnw clean install -DskipTests && cd ..
@@ -193,7 +156,7 @@ cd nuvo-loan-service && ./mvnw clean install -DskipTests && cd ..
 cd nuvo-pool-service && ./mvnw clean install -DskipTests && cd ..
 ```
 
-### 5. Instalar Dependencias del Frontend
+### 4. Install Frontend Dependencies
 
 ```bash
 cd nuvo-web-admin
@@ -201,252 +164,97 @@ npm install
 cd ..
 ```
 
-## ⚙️ Configuración
+## 🎯 Usage
 
-### Variables de Entorno (Opcional)
+### Start All Services
 
-Puedes configurar variables de entorno para personalizar la configuración:
-
-```bash
-export DB_USERNAME=root
-export DB_PASSWORD=tu_contraseña
-export JWT_SECRET=tu_clave_secreta_jwt
-```
-
-## 🎯 Uso
-
-### Iniciar los Microservicios
-
-Abre **5 terminales diferentes** y ejecuta cada servicio:
+We have provided a script to start all services automatically:
 
 ```bash
-# Terminal 1 - Auth Service
-cd nuvo-auth-service
-./mvnw spring-boot:run
-
-# Terminal 2 - Account Service
-cd nuvo-account-service
-./mvnw spring-boot:run
-
-# Terminal 3 - Transaction Service
-cd nuvo-transaction-service
-./mvnw spring-boot:run
-
-# Terminal 4 - Loan Service  
-cd nuvo-loan-service
-./mvnw spring-boot:run
-
-# Terminal 5 - Pool Service
-cd nuvo-pool-service
-./mvnw spring-boot:run
+chmod +x start-all.sh
+./start-all.sh
 ```
 
-### Iniciar el Frontend
+### Access the Application
 
-```bash
-# Terminal 6 - Frontend
-cd nuvo-web-admin
-ng serve
-```
-
-### Acceder a la Aplicación
-
-Una vez que todos los servicios estén corriendo:
+Once all services are running:
 
 🌐 **Frontend**: http://localhost:4200
+📱 **Flutter App**: http://localhost:5000 (if running)
 
-## 🔑 Usuarios de Prueba
+## 🔑 Test Users
 
-| Email | Contraseña | Rol |
-|-------|------------|-----|
-| bruno@nuvo.com | password | ADMIN |
-| elena@nuvo.com | password | USER |
-| juan@nuvo.com | password | USER |
-| sofia@nuvo.com | password | USER |
+| Email | Password | Role |
+|-------|----------|------|
+| **bruno@nuvo.com** | `password` | **ADMIN** |
+| elena@nuvo.com | `password` | USER |
+| juan@nuvo.com | `password` | USER |
+| sofia@nuvo.com | `password` | USER |
 
 ## 📡 API Endpoints
 
-### Auth Service (8081)
+### Auth Service (8091)
 
 ```
-POST   /api/v1/auth/register  - Registrar nuevo usuario
-POST   /api/v1/auth/login     - Iniciar sesión
-POST   /api/v1/auth/refresh   - Refrescar token
+POST   /api/v1/auth/register  - Register new user
+POST   /api/v1/auth/login     - Login
+POST   /api/v1/auth/refresh   - Refresh token
 ```
 
 ### Account Service (8082)
 
 ```
-GET    /api/v1/accounts                 - Listar todas las cuentas
-GET    /api/v1/accounts/{id}            - Obtener cuenta por ID
-GET    /api/v1/accounts/user/{userId}   - Obtener cuenta por usuario
-POST   /api/v1/accounts                 - Crear nueva cuenta
-PUT    /api/v1/accounts/{id}            - Actualizar cuenta
-DELETE /api/v1/accounts/{id}            - Eliminar cuenta
-POST   /api/v1/accounts/{userId}/deposit - Depositar/retirar
+GET    /api/v1/accounts                 - List all accounts
+GET    /api/v1/accounts/{id}            - Get account by ID
+GET    /api/v1/accounts/user/{userId}   - Get account by user
+POST   /api/v1/accounts                 - Create new account
+PUT    /api/v1/accounts/{id}            - Update account
+DELETE /api/v1/accounts/{id}            - Delete account
+POST   /api/v1/accounts/{userId}/deposit - Deposit/Withdraw
 ```
 
-### Transaction Service (8083)
+### Transaction Service (8086)
 
 ```
-GET    /api/v1/transactions              - Listar todas las transacciones
-GET    /api/v1/transactions/{id}         - Obtener transacción por ID
-GET    /api/v1/transactions/user/{userId} - Transacciones de usuario
-POST   /api/v1/transactions/transfer     - Realizar transferencia
-POST   /api/v1/transactions/deposit      - Realizar depósito
+GET    /api/v1/transactions              - List all transactions
+GET    /api/v1/transactions/{id}         - Get transaction by ID
+GET    /api/v1/transactions/user/{userId} - User transactions
+POST   /api/v1/transactions/transfer     - Make transfer
+POST   /api/v1/transactions/deposit      - Make deposit
 ```
 
 ### Loan Service (8084)
 
 ```
-GET    /api/v1/loans                 - Listar todos los préstamos
-GET    /api/v1/loans/{id}            - Obtener préstamo por ID
-GET    /api/v1/loans/user/{userId}   - Préstamos de usuario
-POST   /api/v1/loans                 - Solicitar préstamo
-PUT    /api/v1/loans/{id}/approve    - Aprobar préstamo
-PUT    /api/v1/loans/{id}/reject     - Rechazar préstamo
-PUT    /api/v1/loans/{id}/pay        - Realizar pago
+GET    /api/v1/loans                 - List all loans
+GET    /api/v1/loans/{id}            - Get loan by ID
+GET    /api/v1/loans/user/{userId}   - User loans
+POST   /api/v1/loans                 - Apply for loan
+PUT    /api/v1/loans/{id}/approve    - Approve loan
+PUT    /api/v1/loans/{id}/reject     - Reject loan
+PUT    /api/v1/loans/{id}/pay        - Make payment
 ```
 
 ### Pool Service (8085)
 
 ```
-GET    /api/v1/pool                      - Listar todas las inversiones
-GET    /api/v1/pool/my-investments/{userId} - Inversiones del usuario
-GET    /api/v1/pool/stats/{userId}       - Estadísticas de inversión
-POST   /api/v1/pool/invest               - Realizar inversión
-POST   /api/v1/pool/withdraw/{id}        - Retirar inversión
+GET    /api/v1/pool                      - List all investments
+GET    /api/v1/pool/my-investments/{userId} - User investments
+GET    /api/v1/pool/stats/{userId}       - Investment stats
+POST   /api/v1/pool/invest               - Make investment
+POST   /api/v1/pool/withdraw/{id}        - Withdraw investment
 ```
 
-## 🗄️ Base de Datos
+## 🤝 Contributing
 
-### Esquema de Datos
+Contributions are welcome! Please:
 
-#### nuvo_auth_db
-```sql
-_user (id, firstname, lastname, email, password, role)
-```
+1. Fork the project
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-#### nuvo_account_db
-```sql
-accounts (id, user_id, account_number, balance, created_at)
-```
+## 📄 License
 
-#### nuvo_transaction_db
-```sql
-transactions (id, source_user_id, target_user_id, amount, type, timestamp)
-```
-
-#### nuvo_loan_db
-```sql
-loans (id, user_id, amount, term_months, interest_rate, status, paid_amount, created_at, approved_at)
-```
-
-#### nuvo_pool_db
-```sql
-investments (id, user_id, invested_amount, status, invested_at)
-```
-
-### Poblar con Datos de Prueba
-
-```bash
-mysql -u root -p < docs/insert_data.sql
-```
-
-Esto creará:
-- 10 usuarios
-- 10 cuentas con balances variados
-- 20 transacciones de ejemplo
-- 10 préstamos en diferentes estados
-- 4 inversiones activas
-
-## 🧪 Testing
-
-```bash
-# Ejecutar tests de un microservicio
-cd nuvo-auth-service
-./mvnw test
-
-# Ejecutar tests del frontend
-cd nuvo-web-admin
-npm test
-```
-
-## 🐛 Troubleshooting
-
-### Error de Conexión a Base de Datos
-
-Si obtienes `Access denied for user 'root'@'localhost'`:
-
-1. Verifica tus credenciales en `application.yml`
-2. Asegúrate de que MySQL/MariaDB esté corriendo
-3. Otorga permisos al usuario:
-
-```sql
-ALTER USER 'root'@'localhost' IDENTIFIED BY 'tu_contraseña';
-FLUSH PRIVILEGES;
-```
-
-### Puerto Ya en Uso
-
-Si un puerto está ocupado:
-
-```bash
-# Linux/Mac
-lsof -i :8081  # Reemplaza 8081 con el puerto
-kill -9 <PID>
-
-# Windows
-netstat -ano | findstr :8081
-taskkill /PID <PID> /F
-```
-
-### Problemas con Angular
-
-```bash
-cd nuvo-web-admin
-rm -rf node_modules package-lock.json
-npm install
-ng serve
-```
-
-## 🤝 Contribuir
-
-¡Las contribuciones son bienvenidas! Por favor:
-
-1. Fork el proyecto
-2. Crea una rama para tu característica (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
-
-## 📝 Roadmap
-
-- [ ] Implementar notificaciones en tiempo real
-- [ ] Agregar tests unitarios y de integración
-- [ ] Implementar Circuit Breaker con Resilience4j
-- [ ] Agregar API Gateway (Spring Cloud Gateway)
-- [ ] Implementar Service Discovery (Eureka)
-- [ ] Containerización con Docker
-- [ ] Orquestación con Kubernetes
-- [ ] CI/CD con GitHub Actions
-
-## 👥 Autores
-
-- **Tu Nombre** - *Desarrollo Inicial* - [ASADDS2](https://github.com/ASADDS2)
-
-## 📄 Licencia
-
-Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.
-
-## 🙏 Agradecimientos
-
-- Spring Boot por el excelente framework
-- Angular por la poderosa plataforma frontend
-- La comunidad de código abierto
-
----
-
-⭐ **Si este proyecto te fue útil, considera darle una estrella!** ⭐
-
-Para preguntas o soporte, abre un [issue](https://github.com/ASADDS2/NUVO/issues).
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
