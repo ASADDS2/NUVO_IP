@@ -4,9 +4,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
   // --- ENDPOINTS ---
-  static final String _authUrl = 'http://localhost:8081/api/v1/auth';
+  static final String _authUrl = 'http://localhost:8091/api/v1/auth';
   final String _accountUrl = 'http://localhost:8082/api/v1/accounts';
-  final String _transactionUrl = 'http://localhost:8083/api/v1/transactions';
+  final String _transactionUrl = 'http://localhost:8086/api/v1/transactions';
   final String _loanUrl = 'http://localhost:8084/api/v1/loans';
   final String _poolUrl = 'http://localhost:8085/api/v1/pool';
 
@@ -89,6 +89,19 @@ class ApiService {
     }
   }
 
+  Future<int?> getUserIdByPhone(String phone) async {
+    try {
+      final response = await http.get(Uri.parse('$_authUrl/phone/$phone'));
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return data['id'];
+      }
+    } catch (e) {
+      print("Error fetching user by phone: $e");
+    }
+    return null;
+  }
+
   // --- ACCOUNT & TRANSACTIONS ---
   Future<Map<String, dynamic>> getAccountData(int userId) async {
     try {
@@ -145,8 +158,8 @@ class ApiService {
         Uri.parse('$_transactionUrl/transfer'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
-          'sourceAccountId': sourceUserId, // Assuming ID mapping for simplicity
-          'targetAccountId': targetUserId,
+          'sourceUserId': sourceUserId,
+          'targetUserId': targetUserId,
           'amount': amount,
         }),
       );

@@ -60,6 +60,11 @@ public class AuthenticationController {
         return ResponseEntity.ok(retrieveUserUseCase.getUserById(id));
     }
 
+    @GetMapping("/phone/{phoneNumber}")
+    public ResponseEntity<User> getUserByPhone(@PathVariable String phoneNumber) {
+        return ResponseEntity.ok(retrieveUserUseCase.getUserByPhone(phoneNumber));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUserById(@PathVariable Integer id) {
         deleteUserUseCase.deleteById(id);

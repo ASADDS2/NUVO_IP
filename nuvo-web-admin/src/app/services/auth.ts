@@ -9,7 +9,7 @@ export class AuthService {
   private http = inject(HttpClient);
 
   // OJO: Apuntamos directo al Auth Service porque no tenemos Gateway activo
-  private apiUrl = 'http://localhost:8081/api/v1/auth';
+  private apiUrl = 'http://localhost:8091/api/v1/auth';
 
   login(email: string, password: string): Observable<any> {
     // Limpiar cualquier sesión anterior antes de iniciar una nueva

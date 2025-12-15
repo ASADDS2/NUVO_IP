@@ -53,7 +53,7 @@ if docker ps --format '{{.Names}}' | grep -q "^nuvo_postgres$"; then
     echo -e "${GREEN}✓ PostgreSQL (Docker) está corriendo${NC}"
 else
     echo -e "${RED}✗ PostgreSQL no está corriendo. Iniciando contenedor...${NC}"
-    docker run -d --name nuvo_postgres --network host -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=1234 -v "$BASE_DIR/docker/init-scripts":/docker-entrypoint-initdb.d -v postgres_data:/var/lib/postgresql/data postgres:16-alpine -p 5444
+    docker run -d --name nuvo_postgres -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=1234 -v "$BASE_DIR/docker/init-scripts":/docker-entrypoint-initdb.d -v postgres_data:/var/lib/postgresql/data -p 5444:5432 postgres:16-alpine
     echo "Esperando a que la base de datos esté lista..."
     sleep 10
 fi
@@ -63,13 +63,13 @@ echo ""
 echo -e "${YELLOW}🚀 Iniciando Microservicios Backend...${NC}"
 echo ""
 
-start_service "nuvo-auth-service" 8081
+start_service "nuvo-auth-service" 8091
 sleep 3
 
 start_service "nuvo-account-service" 8082
 sleep 2
 
-start_service "nuvo-transaction-service" 8083
+start_service "nuvo-transaction-service" 8086
 sleep 2
 
 start_service "nuvo-loan-service" 8084
@@ -98,9 +98,9 @@ echo -e "${GREEN}✅ ¡Todos los servicios están iniciados!${NC}"
 echo ""
 echo "📊 Estado de Servicios:"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "  🔐 Auth Service:        http://localhost:8081"
+echo "  🔐 Auth Service:        http://localhost:8091"
 echo "  💰 Account Service:     http://localhost:8082"
-echo "  💸 Transaction Service: http://localhost:8083"
+echo "  💸 Transaction Service: http://localhost:8086"
 echo "  🏦 Loan Service:        http://localhost:8084"
 echo "  📈 Pool Service:        http://localhost:8085"
 echo "  🌐 Frontend:            http://localhost:4200"

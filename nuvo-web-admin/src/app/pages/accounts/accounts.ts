@@ -2,6 +2,8 @@ import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DataService } from '../../services/data';
 import Swal from 'sweetalert2';
+import { forkJoin, map, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-accounts',
@@ -28,29 +30,45 @@ export class AccountsComponent implements OnInit {
       next: (data: any) => {
         console.log('✅ Cuentas recibidas:', data);
 
+        let initialAccounts = [];
         if (Array.isArray(data)) {
-          this.accounts = data;
+          initialAccounts = data;
         } else {
           // Fallback por si viene envuelto en un objeto
-          this.accounts = data.content || [];
+          initialAccounts = data.content || [];
         }
 
-        this.isLoading = false;
-        this.cdr.detectChanges(); // 
+        // Fetch user details for each account
+        if (initialAccounts.length > 0) {
+          const userRequests = initialAccounts.map((acc: any) =>
+            this.dataService.getUserById(acc.userId).pipe(
+              map((user: any) => ({
+                ...acc,
+                accountHolder: `${user.firstname} ${user.lastname}`,
+                userPhone: user.phone
+              })),
+              catchError(() => of({ ...acc, accountHolder: 'Desconocido', userPhone: 'N/A' }))
+            )
+          );
 
-        // Mostrar notificación de éxito
-        if (this.accounts.length > 0) {
-          Swal.fire({
-            title: '!Cuentas Cargadas!',
-            text: `Se cargaron ${this.accounts.length} cuenta(s) exitosamente`,
-            icon: 'success',
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 2000,
-            background: '#1f2937',
-            color: '#fff'
+          forkJoin(userRequests).subscribe({
+            next: (updatedAccounts: any) => {
+              this.accounts = updatedAccounts;
+              this.isLoading = false;
+              this.cdr.detectChanges();
+              this.showSuccessToast();
+            },
+            error: (err) => {
+              console.error('Error fetching user details', err);
+              this.accounts = initialAccounts; // Fallback to accounts without names
+              this.isLoading = false;
+              this.cdr.detectChanges();
+            }
           });
+        } else {
+          this.accounts = [];
+          this.isLoading = false;
+          this.cdr.detectChanges();
         }
       },
       error: (err: any) => {
@@ -68,6 +86,22 @@ export class AccountsComponent implements OnInit {
         });
       }
     });
+  }
+
+  showSuccessToast() {
+    if (this.accounts.length > 0) {
+      Swal.fire({
+        title: '!Cuentas Cargadas!',
+        text: `Se cargaron ${this.accounts.length} cuenta(s) exitosamente`,
+        icon: 'success',
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 2000,
+        background: '#1f2937',
+        color: '#fff'
+      });
+    }
   }
 
   // --- MODAL LOGIC ---

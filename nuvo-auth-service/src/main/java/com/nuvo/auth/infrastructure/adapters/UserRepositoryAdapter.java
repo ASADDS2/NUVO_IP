@@ -35,6 +35,11 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
     }
 
     @Override
+    public Optional<User> findByPhone(String phone) {
+        return jpaUserRepository.findFirstByPhone(phone).map(mapper::toDomain);
+    }
+
+    @Override
     public Optional<User> findById(Integer id) {
         return jpaUserRepository.findById(id).map(mapper::toDomain);
     }

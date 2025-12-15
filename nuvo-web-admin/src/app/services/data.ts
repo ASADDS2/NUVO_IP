@@ -85,6 +85,6 @@ export class DataService {
 
   // --- AUTH ---
   getUserById(userId: number): Observable<any> {
-    return this.http.get<any>(`http://localhost:8081/api/v1/auth/${userId}`);
+    return this.http.get<any>(`http://localhost:8091/api/v1/auth/${userId}`);
   }
 }

@@ -10,6 +10,8 @@ public interface UserRepositoryPort {
 
     Optional<User> findByEmailOrPhone(String email, String phone);
 
+    Optional<User> findByPhone(String phone);
+
     Optional<User> findById(Integer id);
 
     void deleteById(Integer id);

@@ -52,7 +52,32 @@ class _TransferScreenState extends State<TransferScreen> {
 
     // Llamada al API
     final amount = double.parse(_montoCtrl.text);
-    final targetId = int.tryParse(_destinatarioCtrl.text) ?? 0;
+    final targetInput = _destinatarioCtrl.text;
+    int targetId = 0;
+
+    // Try to resolve by phone number first
+    final idFromPhone = await _api.getUserIdByPhone(targetInput);
+    
+    if (idFromPhone != null) {
+      targetId = idFromPhone;
+    } else {
+      // If it looks like a phone number (e.g. > 6 digits) and wasn't found, warn the user
+      if (targetInput.length > 6) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("El número de celular no está registrado"),
+              backgroundColor: NuvoGradients.redText,
+            ),
+          );
+        }
+        setState(() => _isLoading = false);
+        return;
+      }
+      
+      // Fallback to direct ID (legacy) for shorter numbers
+      targetId = int.tryParse(targetInput) ?? 0;
+    }
 
     final prefs = await SharedPreferences.getInstance();
     final userId = prefs.getInt('userId');
