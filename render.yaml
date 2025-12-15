@@ -17,20 +17,28 @@ services:
     rootDir: nuvo-auth-service
     dockerfilePath: ./Dockerfile
     envVars:
-      - key: SPRING_DATASOURCE_URL
+      - key: DB_HOST
         fromDatabase:
           name: nuvo-postgres
-          property: connectionString
-      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
-        value: update
-      - key: SPRING_DATASOURCE_USERNAME
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: nuvo-postgres
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: nuvo-postgres
+          property: database
+      - key: DB_USER
         fromDatabase:
           name: nuvo-postgres
           property: user
-      - key: SPRING_DATASOURCE_PASSWORD
+      - key: DB_PASSWORD
         fromDatabase:
           name: nuvo-postgres
           property: password
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: update
       - key: SERVER_PORT
         value: 8080
 
@@ -43,20 +51,28 @@ services:
     rootDir: nuvo-account-service
     dockerfilePath: ./Dockerfile
     envVars:
-      - key: SPRING_DATASOURCE_URL
+      - key: DB_HOST
         fromDatabase:
           name: nuvo-postgres
-          property: connectionString
-      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
-        value: update
-      - key: SPRING_DATASOURCE_USERNAME
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: nuvo-postgres
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: nuvo-postgres
+          property: database
+      - key: DB_USER
         fromDatabase:
           name: nuvo-postgres
           property: user
-      - key: SPRING_DATASOURCE_PASSWORD
+      - key: DB_PASSWORD
         fromDatabase:
           name: nuvo-postgres
           property: password
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: update
       - key: SERVER_PORT
         value: 8080
 
@@ -69,20 +85,28 @@ services:
     rootDir: nuvo-transaction-service
     dockerfilePath: ./Dockerfile
     envVars:
-      - key: SPRING_DATASOURCE_URL
+      - key: DB_HOST
         fromDatabase:
           name: nuvo-postgres
-          property: connectionString
-      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
-        value: update
-      - key: SPRING_DATASOURCE_USERNAME
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: nuvo-postgres
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: nuvo-postgres
+          property: database
+      - key: DB_USER
         fromDatabase:
           name: nuvo-postgres
           property: user
-      - key: SPRING_DATASOURCE_PASSWORD
+      - key: DB_PASSWORD
         fromDatabase:
           name: nuvo-postgres
           property: password
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: update
       - key: SERVER_PORT
         value: 8080
 
@@ -95,20 +119,28 @@ services:
     rootDir: nuvo-loan-service
     dockerfilePath: ./Dockerfile
     envVars:
-      - key: SPRING_DATASOURCE_URL
+      - key: DB_HOST
         fromDatabase:
           name: nuvo-postgres
-          property: connectionString
-      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
-        value: update
-      - key: SPRING_DATASOURCE_USERNAME
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: nuvo-postgres
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: nuvo-postgres
+          property: database
+      - key: DB_USER
         fromDatabase:
           name: nuvo-postgres
           property: user
-      - key: SPRING_DATASOURCE_PASSWORD
+      - key: DB_PASSWORD
         fromDatabase:
           name: nuvo-postgres
           property: password
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: update
       - key: SERVER_PORT
         value: 8080
 
@@ -121,19 +153,27 @@ services:
     rootDir: nuvo-pool-service
     dockerfilePath: ./Dockerfile
     envVars:
-      - key: SPRING_DATASOURCE_URL
+      - key: DB_HOST
         fromDatabase:
           name: nuvo-postgres
-          property: connectionString
-      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
-        value: update
-      - key: SPRING_DATASOURCE_USERNAME
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: nuvo-postgres
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: nuvo-postgres
+          property: database
+      - key: DB_USER
         fromDatabase:
           name: nuvo-postgres
           property: user
-      - key: SPRING_DATASOURCE_PASSWORD
+      - key: DB_PASSWORD
         fromDatabase:
           name: nuvo-postgres
           property: password
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: update
       - key: SERVER_PORT
         value: 8080
