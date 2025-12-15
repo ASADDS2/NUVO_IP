@@ -4,11 +4,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
   // --- ENDPOINTS ---
-  static final String _authUrl = 'http://localhost:8091/api/v1/auth';
-  final String _accountUrl = 'http://localhost:8082/api/v1/accounts';
-  final String _transactionUrl = 'http://localhost:8086/api/v1/transactions';
-  final String _loanUrl = 'http://localhost:8084/api/v1/loans';
-  final String _poolUrl = 'http://localhost:8085/api/v1/pool';
+  // PRODUCCIÓN - URLs de Render
+  static const String baseUrlAuth =
+      'https://nuvo-auth-service-vatj.onrender.com/api/v1';
+  static const String baseUrlAccount =
+      'https://nuvo-account-service-ogjc.onrender.com/api/v1';
+  static const String baseUrlTransaction =
+      'https://nuvo-transaction-service-81vq.onrender.com/api/v1';
+  static const String baseUrlLoan =
+      'https://nuvo-loan-service-a7fj.onrender.com/api/v1';
+  static const String baseUrlPool =
+      'https://nuvo-pool-service-xl32.onrender.com/api/v1/pool';
 
   // --- AUTH ---
   Future<Map<String, dynamic>> login(String email, String password) async {
