@@ -7,5 +7,7 @@ RUN mvn clean package -DskipTests -Dmaven.test.skip=true
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
+COPY entrypoint.sh .
+RUN chmod +x entrypoint.sh
 EXPOSE 8084
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["./entrypoint.sh"]
