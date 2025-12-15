@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/v1/loans")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class LoanController {
 
     private final CreateLoanUseCase createLoanUseCase;

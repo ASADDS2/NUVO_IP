@@ -17,7 +17,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/accounts")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class AccountController {
 
     private final CreateAccountUseCase createAccountUseCase;
