@@ -1,202 +1,155 @@
+# Render Blueprint para NUVO IP
+# Este archivo automatiza el despliegue de todos los servicios
+
+databases:
+  - name: nuvo-postgres
+    databaseName: nuvo_production
+    user: nuvo_user
+    region: oregon
+    plan: free
+    ipAllowList: []
+
 services:
-  # --- Frontend ---
+  # Auth Service
   - type: web
-    name: nuvo-frontend
-    env: static
+    name: nuvo-auth-service
+    runtime: java
+    region: oregon
+    plan: free
+    branch: main
+    rootDir: nuvo-auth-service
+    buildCommand: ./mvnw clean package -DskipTests
+    startCommand: java -Dserver.port=$PORT -jar target/*.jar
+    envVars:
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: nuvo-postgres
+          property: connectionString
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: update
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: nuvo-postgres
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: nuvo-postgres
+          property: password
+
+  # Account Service
+  - type: web
+    name: nuvo-account-service
+    runtime: java
+    region: oregon
+    plan: free
+    branch: main
+    rootDir: nuvo-account-service
+    buildCommand: ./mvnw clean package -DskipTests
+    startCommand: java -Dserver.port=$PORT -jar target/*.jar
+    envVars:
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: nuvo-postgres
+          property: connectionString
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: update
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: nuvo-postgres
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: nuvo-postgres
+          property: password
+
+  # Transaction Service
+  - type: web
+    name: nuvo-transaction-service
+    runtime: java
+    region: oregon
+    plan: free
+    branch: main
+    rootDir: nuvo-transaction-service
+    buildCommand: ./mvnw clean package -DskipTests
+    startCommand: java -Dserver.port=$PORT -jar target/*.jar
+    envVars:
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: nuvo-postgres
+          property: connectionString
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: update
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: nuvo-postgres
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: nuvo-postgres
+          property: password
+
+  # Loan Service
+  - type: web
+    name: nuvo-loan-service
+    runtime: java
+    region: oregon
+    plan: free
+    branch: main
+    rootDir: nuvo-loan-service
+    buildCommand: ./mvnw clean package -DskipTests
+    startCommand: java -Dserver.port=$PORT -jar target/*.jar
+    envVars:
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: nuvo-postgres
+          property: connectionString
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: update
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: nuvo-postgres
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: nuvo-postgres
+          property: password
+
+  # Pool Service
+  - type: web
+    name: nuvo-pool-service
+    runtime: java
+    region: oregon
+    plan: free
+    branch: main
+    rootDir: nuvo-pool-service
+    buildCommand: ./mvnw clean package -DskipTests
+    startCommand: java -Dserver.port=$PORT -jar target/*.jar
+    envVars:
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: nuvo-postgres
+          property: connectionString
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: update
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: nuvo-postgres
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: nuvo-postgres
+          property: password
+
+  # Web Admin (Angular)
+  - type: web
+    name: nuvo-web-admin
+    runtime: static
+    region: oregon
+    branch: main
     rootDir: nuvo-web-admin
     buildCommand: npm install && npm run build
     staticPublishPath: dist/nuvo-web-admin/browser
-    plan: free
-    branch: main
-
-  # --- Backend Services ---
-  - type: web
-    name: nuvo-auth-service
-    runtime: docker
-    rootDir: nuvo-auth-service
-    plan: free
-    envVars:
-      - key: SERVER_PORT
-        value: 8080
-      - key: DB_HOST
-        fromDatabase:
-          name: nuvo-db
-          property: host
-      - key: DB_PORT
-        fromDatabase:
-          name: nuvo-db
-          property: port
-      - key: DB_NAME
-        fromDatabase:
-          name: nuvo-db
-          property: database
-      - key: DB_USER
-        fromDatabase:
-          name: nuvo-db
-          property: user
-      - key: DB_PASS
-        fromDatabase:
-          name: nuvo-db
-          property: password
-      - key: SPRING_DATASOURCE_URL
-        value: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
-      - key: SPRING_DATASOURCE_USERNAME
-        envVar: DB_USER
-      - key: SPRING_DATASOURCE_PASSWORD
-        envVar: DB_PASS
-      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
-        value: update
-
-  - type: web
-    name: nuvo-account-service
-    runtime: docker
-    rootDir: nuvo-account-service
-    plan: free
-    envVars:
-      - key: SERVER_PORT
-        value: 8080
-      - key: DB_HOST
-        fromDatabase:
-          name: nuvo-db
-          property: host
-      - key: DB_PORT
-        fromDatabase:
-          name: nuvo-db
-          property: port
-      - key: DB_NAME
-        fromDatabase:
-          name: nuvo-db
-          property: database
-      - key: DB_USER
-        fromDatabase:
-          name: nuvo-db
-          property: user
-      - key: DB_PASS
-        fromDatabase:
-          name: nuvo-db
-          property: password
-      - key: SPRING_DATASOURCE_URL
-        value: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
-      - key: SPRING_DATASOURCE_USERNAME
-        envVar: DB_USER
-      - key: SPRING_DATASOURCE_PASSWORD
-        envVar: DB_PASS
-      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
-        value: update
-
-  - type: web
-    name: nuvo-transaction-service
-    runtime: docker
-    rootDir: nuvo-transaction-service
-    plan: free
-    envVars:
-      - key: SERVER_PORT
-        value: 8080
-      - key: DB_HOST
-        fromDatabase:
-          name: nuvo-db
-          property: host
-      - key: DB_PORT
-        fromDatabase:
-          name: nuvo-db
-          property: port
-      - key: DB_NAME
-        fromDatabase:
-          name: nuvo-db
-          property: database
-      - key: DB_USER
-        fromDatabase:
-          name: nuvo-db
-          property: user
-      - key: DB_PASS
-        fromDatabase:
-          name: nuvo-db
-          property: password
-      - key: SPRING_DATASOURCE_URL
-        value: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
-      - key: SPRING_DATASOURCE_USERNAME
-        envVar: DB_USER
-      - key: SPRING_DATASOURCE_PASSWORD
-        envVar: DB_PASS
-      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
-        value: update
-
-  - type: web
-    name: nuvo-loan-service
-    runtime: docker
-    rootDir: nuvo-loan-service
-    plan: free
-    envVars:
-      - key: SERVER_PORT
-        value: 8080
-      - key: DB_HOST
-        fromDatabase:
-          name: nuvo-db
-          property: host
-      - key: DB_PORT
-        fromDatabase:
-          name: nuvo-db
-          property: port
-      - key: DB_NAME
-        fromDatabase:
-          name: nuvo-db
-          property: database
-      - key: DB_USER
-        fromDatabase:
-          name: nuvo-db
-          property: user
-      - key: DB_PASS
-        fromDatabase:
-          name: nuvo-db
-          property: password
-      - key: SPRING_DATASOURCE_URL
-        value: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
-      - key: SPRING_DATASOURCE_USERNAME
-        envVar: DB_USER
-      - key: SPRING_DATASOURCE_PASSWORD
-        envVar: DB_PASS
-      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
-        value: update
-
-  - type: web
-    name: nuvo-pool-service
-    runtime: docker
-    rootDir: nuvo-pool-service
-    plan: free
-    envVars:
-      - key: SERVER_PORT
-        value: 8080
-      - key: DB_HOST
-        fromDatabase:
-          name: nuvo-db
-          property: host
-      - key: DB_PORT
-        fromDatabase:
-          name: nuvo-db
-          property: port
-      - key: DB_NAME
-        fromDatabase:
-          name: nuvo-db
-          property: database
-      - key: DB_USER
-        fromDatabase:
-          name: nuvo-db
-          property: user
-      - key: DB_PASS
-        fromDatabase:
-          name: nuvo-db
-          property: password
-      - key: SPRING_DATASOURCE_URL
-        value: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
-      - key: SPRING_DATASOURCE_USERNAME
-        envVar: DB_USER
-      - key: SPRING_DATASOURCE_PASSWORD
-        envVar: DB_PASS
-      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
-        value: update
-
-databases:
-  - name: nuvo-db
-    databaseName: nuvo_db
-    user: nuvo_user
-    plan: free
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
