@@ -4,6 +4,7 @@ import com.nuvo.loan.domain.model.Loan;
 import com.nuvo.loan.domain.ports.in.ApproveLoanUseCase;
 import com.nuvo.loan.domain.ports.in.CreateLoanUseCase;
 import com.nuvo.loan.domain.ports.in.GetLoansUseCase;
+import com.nuvo.loan.domain.ports.in.RejectLoanUseCase;
 import com.nuvo.loan.infrastructure.dto.LoanRequest;
 import com.nuvo.loan.infrastructure.dto.LoanResponse;
 import com.nuvo.loan.infrastructure.mapper.LoanWebMapper;
@@ -21,6 +22,7 @@ public class LoanController {
 
     private final CreateLoanUseCase createLoanUseCase;
     private final ApproveLoanUseCase approveLoanUseCase;
+    private final RejectLoanUseCase rejectLoanUseCase;
     private final GetLoansUseCase getLoansUseCase;
     private final LoanWebMapper loanMapper;
 
@@ -37,6 +39,12 @@ public class LoanController {
     public ResponseEntity<LoanResponse> approveLoan(@PathVariable Long loanId) {
         Loan approvedLoan = approveLoanUseCase.approveLoan(loanId);
         return ResponseEntity.ok(loanMapper.toResponse(approvedLoan));
+    }
+
+    @PutMapping("/{loanId}/reject")
+    public ResponseEntity<LoanResponse> rejectLoan(@PathVariable Long loanId) {
+        Loan rejectedLoan = rejectLoanUseCase.rejectLoan(loanId);
+        return ResponseEntity.ok(loanMapper.toResponse(rejectedLoan));
     }
 
     @PostMapping("/{loanId}/pay")
