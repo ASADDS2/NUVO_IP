@@ -133,7 +133,6 @@ services:
   - type: web
     name: nuvo-web-admin
     runtime: static
-    plan: free
     branch: main
     rootDir: nuvo-web-admin
     buildCommand: npm install && npm run build
