@@ -4,17 +4,23 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
   // --- ENDPOINTS ---
-  static final String _authUrl = 'http://localhost:8091/api/v1/auth';
-  final String _accountUrl = 'http://localhost:8082/api/v1/accounts';
-  final String _transactionUrl = 'http://localhost:8086/api/v1/transactions';
-  final String _loanUrl = 'http://localhost:8084/api/v1/loans';
-  final String _poolUrl = 'http://localhost:8085/api/v1/pool';
+  // PRODUCCIÓN - URLs de Render
+  static const String baseUrlAuth =
+      'https://nuvo-auth-service-vatj.onrender.com/api/v1';
+  static const String baseUrlAccount =
+      'https://nuvo-account-service-ogjc.onrender.com/api/v1';
+  static const String baseUrlTransaction =
+      'https://nuvo-transaction-service-81vq.onrender.com/api/v1';
+  static const String baseUrlLoan =
+      'https://nuvo-loan-service-a7fj.onrender.com/api/v1';
+  static const String baseUrlPool =
+      'https://nuvo-pool-service-xl32.onrender.com/api/v1/pool';
 
   // --- AUTH ---
   Future<Map<String, dynamic>> login(String email, String password) async {
     try {
       final response = await http.post(
-        Uri.parse('$_authUrl/authenticate'),
+        Uri.parse('$baseUrlAuth/auth/authenticate'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'email': email, 'password': password}),
       );
@@ -50,7 +56,7 @@ class ApiService {
   ) async {
     try {
       final response = await http.post(
-        Uri.parse('$_authUrl/register'),
+        Uri.parse('$baseUrlAuth/auth/register'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'firstname': firstname,
@@ -68,7 +74,7 @@ class ApiService {
           // Create Account
           try {
             await http.post(
-              Uri.parse(_accountUrl),
+              Uri.parse('$baseUrlAccount/accounts'),
               headers: {'Content-Type': 'application/json'},
               body: jsonEncode({'userId': data['id']}),
             );
@@ -91,7 +97,9 @@ class ApiService {
 
   Future<int?> getUserIdByPhone(String phone) async {
     try {
-      final response = await http.get(Uri.parse('$_authUrl/phone/$phone'));
+      final response = await http.get(
+        Uri.parse('$baseUrlAuth/auth/phone/$phone'),
+      );
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         return data['id'];
@@ -105,7 +113,9 @@ class ApiService {
   // --- ACCOUNT & TRANSACTIONS ---
   Future<Map<String, dynamic>> getAccountData(int userId) async {
     try {
-      final response = await http.get(Uri.parse('$_accountUrl/$userId'));
+      final response = await http.get(
+        Uri.parse('$baseUrlAccount/accounts/$userId'),
+      );
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -123,7 +133,7 @@ class ApiService {
   Future<List<dynamic>> getHistory(int userId) async {
     try {
       final response = await http.get(
-        Uri.parse('$_transactionUrl/history/$userId'),
+        Uri.parse('$baseUrlTransaction/transactions/history/$userId'),
       );
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
@@ -138,7 +148,9 @@ class ApiService {
   Future<bool> deposit(int userId, double amount) async {
     try {
       final response = await http.post(
-        Uri.parse('$_transactionUrl/deposit?userId=$userId&amount=$amount'),
+        Uri.parse(
+          '$baseUrlTransaction/transactions/deposit?userId=$userId&amount=$amount',
+        ),
         headers: {'Content-Type': 'application/json'},
       );
       return response.statusCode == 200;
@@ -155,7 +167,7 @@ class ApiService {
   ) async {
     try {
       final response = await http.post(
-        Uri.parse('$_transactionUrl/transfer'),
+        Uri.parse('$baseUrlTransaction/transactions/transfer'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'sourceUserId': sourceUserId,
@@ -174,7 +186,7 @@ class ApiService {
   Future<bool> requestLoan(int userId, double amount) async {
     try {
       final response = await http.post(
-        Uri.parse(_loanUrl),
+        Uri.parse('$baseUrlLoan/loans'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'userId': userId,
@@ -192,7 +204,9 @@ class ApiService {
 
   Future<List<dynamic>> getMyLoans(int userId) async {
     try {
-      final response = await http.get(Uri.parse('$_loanUrl/my-loans/$userId'));
+      final response = await http.get(
+        Uri.parse('$baseUrlLoan/loans/my-loans/$userId'),
+      );
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       }
@@ -205,7 +219,7 @@ class ApiService {
   Future<bool> payLoan(int loanId, double amount) async {
     try {
       final response = await http.post(
-        Uri.parse('$_loanUrl/$loanId/pay?amount=$amount'),
+        Uri.parse('$baseUrlLoan/loans/$loanId/pay?amount=$amount'),
         headers: {'Content-Type': 'application/json'},
       );
       return response.statusCode == 200;
@@ -216,7 +230,8 @@ class ApiService {
   }
 
   // --- POOL ---
-  final String _poolsUrl = 'http://localhost:8085/api/v1/pools';
+  static const String _poolsUrl =
+      'https://nuvo-pool-service-xl32.onrender.com/api/v1/pools';
 
   // Get all active pools
   Future<List<dynamic>> getActivePools() async {
@@ -248,7 +263,7 @@ class ApiService {
   Future<bool> investInPool(int userId, int poolId, double amount) async {
     try {
       final response = await http.post(
-        Uri.parse('$_poolUrl/invest'),
+        Uri.parse('$baseUrlPool/invest'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'userId': userId,
@@ -267,7 +282,7 @@ class ApiService {
   Future<List<dynamic>> getMyInvestments(int userId) async {
     try {
       final response = await http.get(
-        Uri.parse('$_poolUrl/my-investments/$userId'),
+        Uri.parse('$baseUrlPool/my-investments/$userId'),
       );
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
@@ -282,7 +297,7 @@ class ApiService {
   Future<bool> withdrawFromPool(int investmentId) async {
     try {
       final response = await http.post(
-        Uri.parse('$_poolUrl/withdraw/$investmentId'),
+        Uri.parse('$baseUrlPool/withdraw/$investmentId'),
         headers: {'Content-Type': 'application/json'},
       );
       return response.statusCode == 200;
@@ -296,7 +311,7 @@ class ApiService {
   Future<bool> invest(int userId, double amount) async {
     try {
       final response = await http.post(
-        Uri.parse('$_poolUrl/invest'),
+        Uri.parse('$baseUrlPool/invest'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'userId': userId, 'amount': amount}),
       );
@@ -309,7 +324,7 @@ class ApiService {
 
   Future<Map<String, dynamic>> getPoolStats(int userId) async {
     try {
-      final response = await http.get(Uri.parse('$_poolUrl/stats/$userId'));
+      final response = await http.get(Uri.parse('$baseUrlPool/stats/$userId'));
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         return {

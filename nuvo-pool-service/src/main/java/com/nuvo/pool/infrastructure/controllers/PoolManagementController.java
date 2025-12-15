@@ -14,7 +14,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/pools")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class PoolManagementController {
 
     private final ManagePoolUseCase managePoolUseCase;

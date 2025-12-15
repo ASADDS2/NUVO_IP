@@ -9,11 +9,12 @@ import { Pool, PoolStats, CreatePoolRequest, UpdatePoolRequest } from '../models
 export class DataService {
   private http = inject(HttpClient);
 
-  // URLs de los microservicios
-  private accountUrl = 'http://localhost:8082/api/v1/accounts';
-  private loanUrl = 'http://localhost:8084/api/v1/loans';
-  private poolUrl = 'http://localhost:8085/api/v1/pool';
-  private poolManagementUrl = 'http://localhost:8085/api/v1/pools';
+  // URLs de los microservicios (Render production)
+  private accountUrl = 'https://nuvo-account-service-ogjc.onrender.com/api/v1/accounts';
+  private loanUrl = 'https://nuvo-loan-service-a7fj.onrender.com/api/v1/loans';
+  private poolUrl = 'https://nuvo-pool-service-xl32.onrender.com/api/v1/pool';
+  private poolManagementUrl = 'https://nuvo-pool-service-xl32.onrender.com/api/v1/pools';
+  private authUrl = 'https://nuvo-auth-service-vatj.onrender.com/api/v1/auth';
 
   // --- CUENTAS ---
   getAllAccounts(): Observable<any[]> {
@@ -85,6 +86,6 @@ export class DataService {
 
   // --- AUTH ---
   getUserById(userId: number): Observable<any> {
-    return this.http.get<any>(`http://localhost:8091/api/v1/auth/${userId}`);
+    return this.http.get<any>(`${this.authUrl}/${userId}`);
   }
 }
