@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import lombok.Data;
 import lombok.Builder;
 
-@FeignClient(name = "transaction-service", url = "http://localhost:8083")
+@FeignClient(name = "transaction-service", url = "${transaction.service.url:http://localhost:8083}")
 public interface TransactionClient {
 
     @PostMapping("/api/v1/transactions/create")

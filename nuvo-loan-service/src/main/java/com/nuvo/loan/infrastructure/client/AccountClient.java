@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import java.math.BigDecimal;
 
-@FeignClient(name = "account-service", url = "http://localhost:8082")
+@FeignClient(name = "account-service", url = "${account.service.url:http://localhost:8082}")
 public interface AccountClient {
 
     @PostMapping("/api/v1/accounts/{userId}/deposit")
