@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,6 +19,21 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+        @ExceptionHandler(NoResourceFoundException.class)
+        public ResponseEntity<ErrorResponse> handleNoResourceFoundException(
+                        NoResourceFoundException ex, HttpServletRequest request) {
+
+                log.error("Resource not found: {}", ex.getMessage());
+
+                ErrorResponse error = ErrorResponse.of(
+                                HttpStatus.NOT_FOUND.value(),
+                                "Not Found",
+                                ex.getMessage(),
+                                request.getRequestURI());
+
+                return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        }
 
         @ExceptionHandler(TransactionFailedException.class)
         public ResponseEntity<ErrorResponse> handleTransactionFailedException(

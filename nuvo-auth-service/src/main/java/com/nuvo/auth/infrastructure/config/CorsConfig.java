@@ -15,8 +15,8 @@ public class CorsConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // Permitir orígenes específicos
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200", "http://localhost:5000"));
+        // Permitir orígenes específicos (usando patterns para mayor flexibilidad)
+        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
 
         // Permitir todos los métodos HTTP
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
