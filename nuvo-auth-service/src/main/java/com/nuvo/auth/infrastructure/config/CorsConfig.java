@@ -15,8 +15,8 @@ public class CorsConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // Permitir todos los orígenes (Flutter Web, Android Emulator, etc.)
-        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
+        // Permitir orígenes específicos
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200", "http://localhost:5000"));
 
         // Permitir todos los métodos HTTP
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));

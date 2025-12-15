@@ -1,0 +1,83 @@
+<div class="flex h-screen bg-nuvo-dark">
+  <!-- Sidebar -->
+  <aside class="w-64 bg-nuvo-sidebar border-r border-nuvo-border flex flex-col">
+    <!-- Logo -->
+    <div class="h-20 flex items-center px-6 border-b border-nuvo-border">
+      <div class="w-10 h-10 bg-nuvo-green rounded-xl flex items-center justify-center mr-3">
+        <span class="text-black font-bold text-xl">N</span>
+      </div>
+      <span class="text-xl font-bold text-nuvo-text tracking-wide">NUVO ADMIN</span>
+    </div>
+
+    <!-- User Profile -->
+    <div class="px-6 py-6 border-b border-nuvo-border">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-nuvo-green rounded-full flex items-center justify-center">
+          <span class="text-black font-bold text-sm">👤</span>
+        </div>
+        <div class="flex-1">
+          <div class="text-nuvo-text text-sm font-semibold">
+            {{ currentUser?.firstname }} {{ currentUser?.lastname }}
+          </div>
+          <div class="text-nuvo-text-secondary text-xs">{{ currentUser?.email }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="flex-1 px-4 py-6 space-y-2">
+      <a
+        routerLink="/app/dashboard"
+        routerLinkActive="bg-nuvo-green/10 text-nuvo-green border-l-4 border-nuvo-green"
+        class="flex items-center gap-3 px-4 py-3 text-nuvo-text-secondary rounded-lg transition-all duration-200 hover:bg-white/5 hover:text-nuvo-green cursor-pointer border-l-4 border-transparent"
+      >
+        <span class="text-lg">📊</span>
+        <span class="font-medium">Dashboard</span>
+      </a>
+
+      <a
+        routerLink="/app/accounts"
+        routerLinkActive="bg-nuvo-green/10 text-nuvo-green border-l-4 border-nuvo-green"
+        class="flex items-center gap-3 px-4 py-3 text-nuvo-text-secondary rounded-lg transition-all duration-200 hover:bg-white/5 hover:text-nuvo-green cursor-pointer border-l-4 border-transparent"
+      >
+        <span class="text-lg">👥</span>
+        <span class="font-medium">Cuentas</span>
+      </a>
+
+      <a
+        routerLink="/app/loans"
+        routerLinkActive="bg-nuvo-green/10 text-nuvo-green border-l-4 border-nuvo-green"
+        class="flex items-center gap-3 px-4 py-3 text-nuvo-text-secondary rounded-lg transition-all duration-200 hover:bg-white/5 hover:text-nuvo-green cursor-pointer border-l-4 border-transparent"
+      >
+        <span class="text-lg">💳</span>
+        <span class="font-medium">Préstamos</span>
+      </a>
+
+      <a
+        routerLink="/app/pool/manage"
+        routerLinkActive="bg-nuvo-green/10 text-nuvo-green border-l-4 border-nuvo-green"
+        class="flex items-center gap-3 px-4 py-3 text-nuvo-text-secondary rounded-lg transition-all duration-200 hover:bg-white/5 hover:text-nuvo-green cursor-pointer border-l-4 border-transparent"
+      >
+        <span class="text-lg">⚙️</span>
+        <span class="font-medium">Gestionar Pools</span>
+      </a>
+    </nav>
+
+    <!-- Theme Toggle & Logout -->
+    <div class="p-4 border-t border-nuvo-border">
+      <!-- Logout Button -->
+      <button
+        (click)="onLogout()"
+        class="flex items-center gap-3 w-full px-4 py-3 text-red-400 hover:bg-red-500/10 rounded-lg transition-all"
+      >
+        <span class="text-lg">🚪</span>
+        <span class="font-medium">Cerrar Sesión</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 overflow-y-auto bg-nuvo-dark">
+    <router-outlet></router-outlet>
+  </main>
+</div>

@@ -1,8 +1,7 @@
 package com.nuvo.auth.domain.ports.in;
 
-import com.nuvo.auth.application.services.AuthenticationResponse;
-import com.nuvo.auth.application.services.RegisterRequest;
+import com.nuvo.auth.domain.model.User;
 
 public interface RegisterUseCase {
-    AuthenticationResponse register(RegisterRequest request);
+    User register(User user);
 }

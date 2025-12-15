@@ -1,0 +1,54 @@
+/* Login Page - Diseño según referencia */
+.login-container {
+    background-color: var(--color-bg-primary);
+    min-height: 100vh;
+}
+
+/* Animación de entrada suave */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.login-card {
+    animation: fadeIn 0.6s ease-out;
+}
+
+/* Estilos para inputs personalizados */
+input[type="checkbox"] {
+    cursor: pointer;
+}
+
+input[type="checkbox"]:checked {
+    background-color: var(--color-green);
+    border-color: var(--color-green);
+}
+
+/* Efectos hover mejorados */
+button[type="submit"]:hover:not(:disabled) {
+    transform: translateY(-2px);
+}
+
+button[type="submit"]:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+/* Transiciones suaves para todos los elementos interactivos */
+a,
+button,
+input {
+    transition: all 0.3s ease;
+}
+
+/* Placeholder styling */
+::placeholder {
+    color: var(--color-text-disabled);
+    opacity: 1;
+}

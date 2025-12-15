@@ -29,7 +29,7 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> {
-            var user = repository.findByEmail(username)
+            var user = repository.findByEmailOrPhone(username, username)
                     .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
             System.out.println("DEBUG - Usuario encontrado: " + user.getEmail());
             System.out.println("DEBUG - Password en BD: " + user.getPassword());
